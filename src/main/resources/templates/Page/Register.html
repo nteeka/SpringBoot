@@ -541,6 +541,16 @@
             <div class="input-group">
               <i class="fas fa-envelope"></i>
               <input
+                type="text"
+                name="username"
+                placeholder="username của bạn"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <i class="fas fa-envelope"></i>
+              <input
                 type="email"
                 name="email"
                 placeholder="Email của bạn"
@@ -552,7 +562,7 @@
               <i class="fas fa-lock"></i>
               <input
                 type="password"
-                name="pass"
+                name="password"
                 placeholder="Mật khẩu"
                 required
               />
@@ -562,7 +572,7 @@
               <i class="fas fa-lock"></i>
               <input
                 type="password"
-                name="cpass"
+                name="confirmPassword"
                 placeholder="Xác nhận mật khẩu"
                 required
               />
@@ -621,22 +631,17 @@
 
             <div class="input-group">
               <i class="fas fa-user"></i>
-              <input type="text" name="fname" placeholder="Họ" required />
+              <input type="text" name="fname" placeholder="Họ" />
             </div>
 
             <div class="input-group">
               <i class="fas fa-user"></i>
-              <input type="text" name="lname" placeholder="Tên" required />
+              <input type="text" name="lname" placeholder="Tên" />
             </div>
 
             <div class="input-group">
               <i class="fas fa-phone"></i>
-              <input
-                type="text"
-                name="phone"
-                placeholder="Số điện thoại"
-                required
-              />
+              <input type="text" name="phone" placeholder="Số điện thoại" />
             </div>
 
             <div class="input-group">
@@ -796,10 +801,32 @@
           $(".progress-bar").css("width", percent + "%");
         }
 
-        $(".submit").click(function () {
-          return false;
-        });
+        // $(".submit").click(function () {
+        //   return false;
+        // });
       });
+    </script>
+    <script>
+      document
+        .querySelector("#msform")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target));
+
+          const res = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          const text = await res.text();
+          if (res.ok) {
+            alert("✅ " + text);
+            window.location.href = "/login";
+          } else {
+            alert("❌ " + text);
+          }
+        });
     </script>
   </body>
 </html>
