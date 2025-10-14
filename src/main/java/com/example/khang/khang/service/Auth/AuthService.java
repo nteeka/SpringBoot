@@ -20,26 +20,25 @@ public class AuthService {
 
     public String register(UserDto dto) {
         // Kiểm tra trùng username
-        if (userRepository.findByUsername(dto.username()).isPresent()) {
+        if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
             return "Username already exists";
         }
 
         // Kiểm tra trùng email
-        if (userRepository.findByEmail(dto.email()).isPresent()) {
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
             return "Email already registered";
         }
 
         // Kiểm tra confirm password
-        if (!dto.password().equals(dto.confirmPassword())) {
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
             return "Passwords do not match";
         }
 
         // Tạo mới user
         User user = User.builder()
-                .username(dto.username())
-                .email(dto.email())
-                .fullName(dto.fullName())
-                .password(encoder.encode(dto.password()))
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .password(encoder.encode(dto.getPassword()))
                 .role("USER")
                 .isActive(true)
                 .build();

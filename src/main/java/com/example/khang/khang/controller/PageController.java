@@ -14,4 +14,14 @@ public class PageController {
     public String loginPage() {
         return "Page/login";
     }
+
+    @GetMapping("/home")
+    public String homePage() {
+        return "Page/Product/home";
+    }
+
+    @GetMapping("/list")
+    public String listPage() {
+        return "Page/Product/list";
+    }
 }

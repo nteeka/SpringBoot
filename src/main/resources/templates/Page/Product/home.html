@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GreenLife - Hoa & Cây Cảnh</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        color: #2d3436;
+        background: #fff;
+        line-height: 1.6;
+        scroll-behavior: smooth;
+      }
+      header {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .top-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 0.85rem;
+        padding: 0.4rem 0;
+        text-align: center;
+      }
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem 1.5rem;
+      }
+      .logo {
+        font-size: 1.6rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-decoration: none;
+      }
+      .nav-center {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+      .nav-center a {
+        text-decoration: none;
+        color: #2d3436;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+      .nav-center a:hover {
+        color: #667eea;
+      }
+      .nav-right {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      .search-input {
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        padding: 0.4rem 0.8rem;
+        outline: none;
+        font-size: 0.9rem;
+      }
+      .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+      .hero {
+        height: 550px;
+        background: url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80")
+          center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+        position: relative;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+      }
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        animation: fadeInUp 1.5s ease both;
+      }
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+      .hero p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+      }
+      .btn {
+        display: inline-block;
+        padding: 0.8rem 2rem;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+      .btn-primary {
+        background: white;
+        color: #667eea;
+      }
+      .btn-primary:hover {
+        background: #f3f4f6;
+      }
+      .btn-secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+      }
+      .btn-secondary:hover {
+        background: white;
+        color: #667eea;
+      }
+      .section {
+        padding: 4rem 1.5rem;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease;
+      }
+      .section.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .section-header h2 {
+        font-size: 2.2rem;
+        margin-bottom: 0.6rem;
+      }
+      .categories-grid,
+      .products-grid {
+        display: grid;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .categories-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+      .category-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s;
+      }
+      .category-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+      }
+      .category-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+      .category-info {
+        padding: 1rem;
+        text-align: center;
+      }
+      .category-info h3 {
+        margin-bottom: 0.4rem;
+        font-size: 1.2rem;
+      }
+      .products-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .product-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s;
+        overflow: hidden;
+      }
+      .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+      }
+      .product-card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+      }
+      .product-info {
+        padding: 1rem;
+      }
+      .product-info h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+      .price {
+        font-weight: 700;
+        color: #667eea;
+      }
+      .add-cart {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .add-cart:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+      /* FOOTER */
+      footer {
+        background: linear-gradient(135deg, #2d3436 0%, #34495e 100%);
+        color: #dfe6e9;
+        padding: 3rem 1.5rem 1.5rem;
+        margin-top: 5rem;
+      }
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .footer-section h3 {
+        color: white;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+      }
+      .footer-section h3::before {
+        background: white;
+      }
+      .footer-section p {
+        line-height: 1.8;
+        color: #b2bec3;
+      }
+      .footer-section a {
+        color: #b2bec3;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 0.6rem;
+        transition: all 0.3s;
+      }
+      .footer-section a:hover {
+        color: white;
+        padding-left: 5px;
+      }
+      .footer-bottom {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        color: #95a5a6;
+      }
+      .social-icons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .social-icons a {
+        display: inline-flex;
+        transition: transform 0.3s;
+      }
+      .social-icons a:hover {
+        transform: scale(1.2);
+      }
+      #scrollTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s;
+      }
+      #scrollTopBtn:hover {
+        transform: translateY(-3px);
+      }
+      @keyframes fadeInUp {
+        0% {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="top-bar">
+        📞 0901 234 567 | 🚚 Miễn phí vận chuyển đơn từ 500k
+      </div>
+      <nav>
+        <a href="#" class="logo">🌸 GreenLife</a>
+        <ul class="nav-center">
+          <li><a href="#home">Trang chủ</a></li>
+          <li><a href="#products">Sản phẩm</a></li>
+          <li><a href="#categories">Danh mục</a></li>
+          <li><a href="#contact">Liên hệ</a></li>
+        </ul>
+        <div class="nav-right">
+          <input class="search-input" type="text" placeholder="Tìm kiếm..." />
+          <button class="icon-btn">🛒</button>
+        </div>
+      </nav>
+    </header>
+
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <h1>Mang Thiên Nhiên Vào Ngôi Nhà Bạn</h1>
+        <p>
+          Hoa tươi & cây cảnh tinh tế, được chọn lọc từ những vườn ươm chất
+          lượng cao nhất
+        </p>
+        <a href="#products" class="btn btn-primary">Khám phá ngay</a>
+        <a href="#about" class="btn btn-secondary">Tìm hiểu thêm</a>
+      </div>
+    </section>
+
+    <section class="section" id="categories">
+      <div class="section-header">
+        <h2>Danh Mục Sản Phẩm</h2>
+        <p>Khám phá thế giới hoa và cây cảnh phong phú</p>
+      </div>
+      <div class="categories-grid">
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=80"
+            alt="Hoa tươi"
+          />
+          <div class="category-info">
+            <h3>Hoa Tươi</h3>
+            <p>Những bông hoa tươi rực rỡ, đầy sức sống</p>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1616628188470-47b6b5e1b2bb?auto=format&fit=crop&w=800&q=80"
+            alt="Cây cảnh"
+          />
+          <div class="category-info">
+            <h3>Cây Cảnh</h3>
+            <p>Làm xanh không gian của bạn với cây trang trí</p>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1543946602-056ae3f90e58?auto=format&fit=crop&w=800&q=80"
+            alt="Bó hoa"
+          />
+          <div class="category-info">
+            <h3>Bó Hoa Nghệ Thuật</h3>
+            <p>Thiết kế độc quyền cho mọi dịp</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+      <div class="section-header">
+        <h2>Sản Phẩm Nổi Bật</h2>
+        <p>Top lựa chọn được yêu thích nhất</p>
+      </div>
+      <div class="products-grid">
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=800&q=80"
+            alt="Hoa tulip"
+          />
+          <div class="product-info">
+            <h3>Hoa Tulip Hà Lan</h3>
+            <div class="price">350.000đ</div>
+            <button class="add-cart">Thêm vào giỏ</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=800&q=80"
+            alt="Xương rồng mini"
+          />
+          <div class="product-info">
+            <h3>Cây Xương Rồng Mini</h3>
+            <div class="price">150.000đ</div>
+            <button class="add-cart">Thêm vào giỏ</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1563897539633-7374c276c212?auto=format&fit=crop&w=800&q=80"
+            alt="Bó hoa hồng đỏ"
+          />
+          <div class="product-info">
+            <h3>Bó Hoa Hồng Đỏ</h3>
+            <div class="price">450.000đ</div>
+            <button class="add-cart">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Về GreenLife</h3>
+          <p>
+            Chúng tôi mang đến hoa và cây cảnh chất lượng cao, giúp không gian
+            sống thêm tươi mới và gần gũi thiên nhiên.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Liên kết nhanh</h3>
+          <a href="#">Trang chủ</a>
+          <a href="#">Sản phẩm</a>
+          <a href="#">Danh mục</a>
+          <a href="#">Liên hệ</a>
+        </div>
+        <div class="footer-section">
+          <h3>Liên hệ</h3>
+          <p>📍 123 Đường ABC, Q.1, TP.HCM</p>
+          <p>📞 0901 234 567</p>
+          <p>✉️ hello@greenlife.vn</p>
+          <div class="social-icons">
+            <a href="#"
+              ><img
+                src="https://cdn-icons-png.flaticon.com/512/174/174855.png"
+                width="24"
+                alt="fb"
+            /></a>
+            <a href="#"
+              ><img
+                src="https://cdn-icons-png.flaticon.com/512/174/174876.png"
+                width="24"
+                alt="insta"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2025 GreenLife. All rights reserved.
+      </div>
+    </footer>
+
+    <button id="scrollTopBtn">⬆️</button>
+
+    <script>
+      const scrollBtn = document.getElementById("scrollTopBtn");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) {
+          scrollBtn.style.display = "flex";
+        } else {
+          scrollBtn.style.display = "none";
+        }
+        document.querySelectorAll(".section").forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 100) {
+            sec.classList.add("show");
+          }
+        });
+      });
+      scrollBtn.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" })
+      );
+    </script>
+  </body>
+</html>

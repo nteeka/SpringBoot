@@ -289,8 +289,6 @@
       }
 
       input[type="text"],
-      input[type="date"],
-      input[type="number"],
       input[type="password"],
       input[type="email"],
       textarea {
@@ -527,7 +525,7 @@
     <!-- Main Content -->
     <main>
       <div class="container">
-        <form id="msform" novalidate>
+        <form id="msform">
           <!-- Progress Bar -->
           <ul id="progressbar">
             <li class="active">Tài Khoản</li>
@@ -580,7 +578,48 @@
               />
             </div>
 
+            <!-- <div class="button-group">
+              <input
+                type="button"
+                name="next"
+                class="next action-button"
+                value="Tiếp Tục"
+              />
+            </div> -->
+            <button type="submit" class="submit action-button">
+              Đăng ký
+            </button>
+          </div>
+        </fieldset>
+          </fieldset>
+
+          <!-- Step 2 -->
+          <!-- <fieldset>
+            <h2 class="fs-title">Mạng Xã Hội</h2>
+            <h3 class="fs-subtitle">Kết nối với chúng tôi (không bắt buộc)</h3>
+
+            <div class="input-group">
+              <i class="fab fa-twitter"></i>
+              <input type="text" name="twitter" placeholder="Twitter" />
+            </div>
+
+            <div class="input-group">
+              <i class="fab fa-facebook"></i>
+              <input type="text" name="facebook" placeholder="Facebook" />
+            </div>
+
+            <div class="input-group">
+              <i class="fab fa-instagram"></i>
+              <input type="text" name="instagram" placeholder="Instagram" />
+            </div>
+
             <div class="button-group">
+              <input
+                type="button"
+                name="previous"
+                class="previous action-button"
+                value="Quay Lại"
+              />
               <input
                 type="button"
                 name="next"
@@ -588,9 +627,10 @@
                 value="Tiếp Tục"
               />
             </div>
-          </fieldset>
-          <!-- Step 2 -->
-          <fieldset>
+          </fieldset> -->
+
+          <!-- Step 3 -->
+          <!-- <fieldset>
             <h2 class="fs-title">Thông Tin Cá Nhân</h2>
             <h3 class="fs-subtitle">Chúng tôi sẽ bảo mật thông tin của bạn</h3>
 
@@ -605,30 +645,13 @@
             </div>
 
             <div class="input-group">
-              <i class="fas fa-age"></i>
-              <input type="number" name="age" placeholder="Tuổi" />
-            </div>
-
-            <div class="input-group">
               <i class="fas fa-phone"></i>
               <input type="text" name="phone" placeholder="Số điện thoại" />
             </div>
 
             <div class="input-group">
-              <i class="fas fa-calendar"></i>
-              <input type="date" name="birthday" placeholder="Ngày sinh" />
-            </div>
-
-            <div class="input-group">
               <i class="fas fa-map-marker-alt"></i>
               <textarea name="address" placeholder="Địa chỉ"></textarea>
-            </div>
-
-            <div class="input-group">
-              <label>
-                <input type="checkbox" name="agreeTerms" />
-                Tôi đồng ý với điều khoản
-              </label>
             </div>
 
             <div class="button-group">
@@ -642,7 +665,7 @@
                 Hoàn Thành
               </button>
             </div>
-          </fieldset>
+          </fieldset> -->
         </form>
       </div>
     </main>
@@ -782,6 +805,10 @@
           percent = percent.toFixed();
           $(".progress-bar").css("width", percent + "%");
         }
+
+        // $(".submit").click(function () {
+        //   return false;
+        // });
       });
     </script>
     <script>

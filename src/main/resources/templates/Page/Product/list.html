@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GreenLife - Danh Sách Sản Phẩm</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        color: #333;
+        background: #f8f9fa;
+      }
+
+      /* HEADER */
+      header {
+        background: white;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .top-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 0.85rem;
+        padding: 0.5rem 0;
+        text-align: center;
+        font-weight: 500;
+      }
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+      }
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-decoration: none;
+      }
+      .nav-center {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+      .nav-center a {
+        text-decoration: none;
+        color: #2d3436;
+        font-weight: 500;
+        transition: all 0.3s;
+        position: relative;
+      }
+      .nav-center a::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        transition: width 0.3s;
+      }
+      .nav-center a:hover::after,
+      .nav-center a.active::after {
+        width: 100%;
+      }
+      .nav-center a:hover,
+      .nav-center a.active {
+        color: #667eea;
+      }
+      .nav-right {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      .search-input {
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        outline: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        width: 200px;
+      }
+      .search-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+      .icon-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        cursor: pointer;
+        font-size: 1.3rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s;
+      }
+      .icon-btn:hover {
+        transform: scale(1.1);
+      }
+
+      /* BANNER */
+      .page-banner {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-align: center;
+        padding: 4rem 1rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .page-banner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path fill="rgba(255,255,255,0.1)" d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"/><path fill="rgba(255,255,255,0.1)" d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"/><path fill="rgba(255,255,255,0.1)" d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"/></svg>')
+          no-repeat bottom;
+        background-size: cover;
+        opacity: 0.3;
+      }
+      .page-banner h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+      }
+      .page-banner p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* MAIN */
+      main {
+        max-width: 1200px;
+        margin: 3rem auto;
+        display: flex;
+        gap: 2rem;
+        padding: 0 1.5rem;
+      }
+
+      /* SIDEBAR */
+      aside {
+        flex: 0 0 280px;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+      }
+      aside > div {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #f1f3f5;
+      }
+      aside > div:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      h3 {
+        color: #2d3436;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      h3::before {
+        content: "";
+        width: 4px;
+        height: 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 2px;
+      }
+      label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0.8rem 0;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: color 0.3s;
+      }
+      label:hover {
+        color: #667eea;
+      }
+      input[type="checkbox"] {
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+        accent-color: #667eea;
+      }
+      select {
+        width: 100%;
+        padding: 0.7rem;
+        border-radius: 12px;
+        border: 2px solid #e9ecef;
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+      input[type="range"] {
+        width: 100%;
+        accent-color: #667eea;
+        cursor: pointer;
+      }
+      .price-display {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.8rem;
+        font-size: 0.9rem;
+        color: #667eea;
+        font-weight: 600;
+      }
+      .reset-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        padding: 0.7rem 1.5rem;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s;
+        font-size: 0.95rem;
+      }
+      .reset-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      /* PRODUCTS */
+      .products {
+        flex: 1;
+      }
+      .filter-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      }
+      #search {
+        flex: 1;
+        padding: 0.7rem 1rem;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+      }
+      #search:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+      .result-count {
+        color: #868e96;
+        font-size: 0.9rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+      .card {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        background: white;
+        border: 1px solid #f1f3f5;
+        position: relative;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.1),
+          rgba(118, 75, 162, 0.1)
+        );
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
+        border-color: #667eea;
+      }
+      .card:hover::before {
+        opacity: 1;
+      }
+      .card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .card:hover img {
+        transform: scale(1.08);
+      }
+      .info {
+        padding: 1.3rem;
+        position: relative;
+      }
+      .info h4 {
+        margin: 0 0 0.6rem 0;
+        font-size: 1.1rem;
+        color: #2d3436;
+        font-weight: 600;
+      }
+      .price {
+        color: #667eea;
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+      .card button {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        padding: 0.7rem 1.5rem;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s;
+        font-size: 0.95rem;
+      }
+      .card button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      /* PAGINATION */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .pagination button {
+        border: none;
+        background: white;
+        color: #495057;
+        padding: 0.7rem 1.2rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      .pagination button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        transform: translateY(-2px);
+      }
+      .pagination button.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+      .pagination button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* FOOTER */
+      footer {
+        background: linear-gradient(135deg, #2d3436 0%, #34495e 100%);
+        color: #dfe6e9;
+        padding: 3rem 1.5rem 1.5rem;
+        margin-top: 5rem;
+      }
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .footer-section h3 {
+        color: white;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+      }
+      .footer-section h3::before {
+        background: white;
+      }
+      .footer-section p {
+        line-height: 1.8;
+        color: #b2bec3;
+      }
+      .footer-section a {
+        color: #b2bec3;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 0.6rem;
+        transition: all 0.3s;
+      }
+      .footer-section a:hover {
+        color: white;
+        padding-left: 5px;
+      }
+      .footer-bottom {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        color: #95a5a6;
+      }
+      .social-icons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .social-icons a {
+        display: inline-flex;
+        transition: transform 0.3s;
+      }
+      .social-icons a:hover {
+        transform: scale(1.2);
+      }
+
+      /* ANIMATIONS */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-enter {
+        animation: fadeIn 0.6s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="top-bar">
+        📞 0901 234 567 | 🚚 Miễn phí vận chuyển đơn từ 500k
+      </div>
+      <nav>
+        <a href="#" class="logo">🌸 GreenLife</a>
+        <ul class="nav-center">
+          <li><a href="#">Trang chủ</a></li>
+          <li><a href="#" class="active">Sản phẩm</a></li>
+          <li><a href="#">Danh mục</a></li>
+          <li><a href="#">Liên hệ</a></li>
+        </ul>
+        <div class="nav-right">
+          <input class="search-input" type="text" placeholder="Tìm kiếm..." />
+          <button class="icon-btn">🛒</button>
+        </div>
+      </nav>
+    </header>
+
+    <section class="page-banner">
+      <h1>Danh Sách Sản Phẩm</h1>
+      <p>Khám phá các loại hoa, cây cảnh & phụ kiện được yêu thích nhất</p>
+    </section>
+
+    <main>
+      <aside>
+        <div>
+          <h3>Loại sản phẩm</h3>
+          <label><input type="checkbox" value="hoa" checked /> Hoa</label>
+          <label><input type="checkbox" value="cay" checked /> Cây cảnh</label>
+          <label
+            ><input type="checkbox" value="phukien" checked /> Phụ kiện</label
+          >
+        </div>
+        <div>
+          <h3>Khoảng giá</h3>
+          <input
+            type="range"
+            id="priceRange"
+            min="0"
+            max="1000000"
+            step="50000"
+            value="1000000"
+          />
+          <div class="price-display">
+            <span>0đ</span>
+            <span id="priceVal">1.000.000đ</span>
+          </div>
+        </div>
+        <div>
+          <h3>Mức độ chăm sóc</h3>
+          <label
+            ><input type="checkbox" class="care-filter" value="easy" checked />
+            Dễ chăm sóc</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              class="care-filter"
+              value="medium"
+              checked
+            />
+            Trung bình</label
+          >
+          <label
+            ><input type="checkbox" class="care-filter" value="hard" checked />
+            Cần chăm sóc kỹ</label
+          >
+        </div>
+        <div>
+          <h3>Kích thước</h3>
+          <label
+            ><input type="checkbox" class="size-filter" value="small" checked />
+            Nhỏ (< 30cm)</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              class="size-filter"
+              value="medium"
+              checked
+            />
+            Vừa (30-60cm)</label
+          >
+          <label
+            ><input type="checkbox" class="size-filter" value="large" checked />
+            Lớn (> 60cm)</label
+          >
+        </div>
+        <div>
+          <h3>Ánh sáng</h3>
+          <label
+            ><input type="checkbox" class="light-filter" value="low" checked />
+            Ít ánh sáng</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              class="light-filter"
+              value="medium"
+              checked
+            />
+            Ánh sáng vừa</label
+          >
+          <label
+            ><input type="checkbox" class="light-filter" value="high" checked />
+            Nhiều ánh sáng</label
+          >
+        </div>
+        <div>
+          <h3>Sắp xếp</h3>
+          <select id="sortSelect">
+            <option value="">Mặc định</option>
+            <option value="asc">Giá tăng dần</option>
+            <option value="desc">Giá giảm dần</option>
+            <option value="name">Tên A-Z</option>
+            <option value="popular">Phổ biến nhất</option>
+          </select>
+        </div>
+        <div>
+          <button class="reset-btn" id="resetFilters">🔄 Đặt lại bộ lọc</button>
+        </div>
+      </aside>
+
+      <section class="products">
+        <div class="filter-bar">
+          <input type="text" id="search" placeholder="🔍 Tìm sản phẩm..." />
+          <div class="result-count" id="resultCount"></div>
+        </div>
+        <div class="grid" id="productGrid"></div>
+        <div class="pagination" id="pagination"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Về GreenLife</h3>
+          <p>
+            Chúng tôi mang đến hoa và cây cảnh chất lượng cao, giúp không gian
+            sống thêm tươi mới và gần gũi thiên nhiên.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Liên kết nhanh</h3>
+          <a href="#">Trang chủ</a>
+          <a href="#">Sản phẩm</a>
+          <a href="#">Danh mục</a>
+          <a href="#">Liên hệ</a>
+        </div>
+        <div class="footer-section">
+          <h3>Liên hệ</h3>
+          <p>📍 123 Đường ABC, Q.1, TP.HCM</p>
+          <p>📞 0901 234 567</p>
+          <p>✉️ hello@greenlife.vn</p>
+          <div class="social-icons">
+            <a href="#"
+              ><img
+                src="https://cdn-icons-png.flaticon.com/512/174/174855.png"
+                width="24"
+                alt="fb"
+            /></a>
+            <a href="#"
+              ><img
+                src="https://cdn-icons-png.flaticon.com/512/174/174876.png"
+                width="24"
+                alt="insta"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2025 GreenLife. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+      const products = [
+        {
+          name: "Hoa Tulip",
+          price: 350000,
+          type: "hoa",
+          img: "https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+          name: "Cây Xương Rồng",
+          price: 150000,
+          type: "cay",
+          img: "https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+          name: "Hoa Hồng Đỏ",
+          price: 450000,
+          type: "hoa",
+          img: "https://images.unsplash.com/photo-1563897539633-7374c276c212?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+          name: "Sen Đá Mini",
+          price: 120000,
+          type: "cay",
+          img: "https://images.unsplash.com/photo-1587135809670-2f2b6b77c65a?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+          name: "Chậu Gốm Trang Trí",
+          price: 200000,
+          type: "phukien",
+          img: "https://images.unsplash.com/photo-1602524818942-f8a9c43e30da?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+          name: "Bình Tưới Cây Mini",
+          price: 180000,
+          type: "phukien",
+          img: "https://images.unsplash.com/photo-1616628188470-47b6b5e1b2bb?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+          name: "Hoa Hướng Dương",
+          price: 400000,
+          type: "hoa",
+          img: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+          name: "Cây Cảnh Văn Phòng",
+          price: 280000,
+          type: "cay",
+          img: "https://images.unsplash.com/photo-1616628188470-47b6b5e1b2bb?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+          name: "Chậu Treo Mini",
+          price: 220000,
+          type: "phukien",
+          img: "https://images.unsplash.com/photo-1602524818942-f8a9c43e30da?auto=format&fit=crop&w=800&q=80",
+        },
+      ];
+
+      const grid = document.getElementById("productGrid");
+      const pagination = document.getElementById("pagination");
+      const range = document.getElementById("priceRange");
+      const priceVal = document.getElementById("priceVal");
+      const resetBtn = document.getElementById("resetFilters");
+      const resultCount = document.getElementById("resultCount");
+
+      let currentPage = 1;
+      const itemsPerPage = 6;
+
+      // ✅ Tạo khung loading skeleton
+      function showSkeleton() {
+        const skeletonCard = `
+            <div class="card skeleton">
+              <div class="skeleton-img"></div>
+              <div class="skeleton-text short"></div>
+              <div class="skeleton-text long"></div>
+            </div>`;
+        grid.innerHTML = skeletonCard.repeat(itemsPerPage);
+      }
+
+      function createCard(p) {
+        return `
+            <div class='card fade-enter'>
+              <img src='${p.img}' alt='${p.name}' />
+              <div class='info'>
+                <h4>${p.name}</h4>
+                <div class='price'>${p.price.toLocaleString()}đ</div>
+                <button>Thêm vào giỏ</button>
+              </div>
+            </div>`;
+      }
+
+      function paginate(list, page = 1) {
+        const start = (page - 1) * itemsPerPage;
+        return list.slice(start, start + itemsPerPage);
+      }
+
+      function renderPagination(total) {
+        pagination.innerHTML = "";
+        const totalPages = Math.ceil(total / itemsPerPage);
+        if (totalPages <= 1) return;
+
+        pagination.appendChild(
+          makeBtn(
+            "← Trước",
+            () => changePage(currentPage - 1),
+            currentPage === 1
+          )
+        );
+        for (let i = 1; i <= totalPages; i++) {
+          pagination.appendChild(
+            makeBtn(i, () => changePage(i), false, i === currentPage)
+          );
+        }
+        pagination.appendChild(
+          makeBtn(
+            "Sau →",
+            () => changePage(currentPage + 1),
+            currentPage === totalPages
+          )
+        );
+      }
+
+      function makeBtn(text, onClick, disabled = false, active = false) {
+        const btn = document.createElement("button");
+        btn.textContent = text;
+        btn.disabled = disabled;
+        if (disabled) btn.style.opacity = 0.6;
+        if (active) btn.classList.add("active");
+        if (!disabled) btn.onclick = onClick;
+        return btn;
+      }
+
+      function changePage(page) {
+        currentPage = page;
+        updateDisplay(true, true);
+      }
+
+      function filterProducts() {
+        const search = document.getElementById("search").value.toLowerCase();
+        const checked = [
+          ...document.querySelectorAll("input[type=checkbox]:checked"),
+        ].map((e) => e.value);
+        const max = parseInt(range.value);
+        const sort = document.getElementById("sortSelect").value;
+
+        let result = products.filter(
+          (p) =>
+            p.name.toLowerCase().includes(search) &&
+            checked.includes(p.type) &&
+            p.price <= max
+        );
+        if (sort === "asc") result.sort((a, b) => a.price - b.price);
+        if (sort === "desc") result.sort((a, b) => b.price - a.price);
+        if (sort === "name")
+          result.sort((a, b) => a.name.localeCompare(b.name));
+        return result;
+      }
+
+      // ✅ Thêm loading + cuộn lên đầu khi lọc
+      function updateDisplay(animate = false, scrollTop = false) {
+        showSkeleton();
+
+        if (scrollTop) {
+          window.scrollTo({ top: 400, behavior: "smooth" });
+        }
+
+        setTimeout(() => {
+          const filtered = filterProducts();
+          const pageItems = paginate(filtered, currentPage);
+          grid.innerHTML = pageItems.map(createCard).join("");
+          renderPagination(filtered.length);
+          resultCount.textContent = `${filtered.length} sản phẩm`;
+        }, 600); // Thời gian loading giả
+      }
+
+      // Khi thay đổi range
+      range.oninput = () => {
+        priceVal.textContent = parseInt(range.value).toLocaleString() + "đ";
+      };
+
+      // ✅ Thêm nút “Lọc” riêng
+      const filterButton = document.createElement("button");
+      filterButton.textContent = "Lọc sản phẩm";
+      filterButton.className = "reset-btn";
+      filterButton.style.marginTop = "1rem";
+      filterButton.onclick = () => {
+        currentPage = 1;
+        updateDisplay(false, true);
+      };
+      document.querySelector("aside").appendChild(filterButton);
+
+      // Nút Đặt lại bộ lọc
+      resetBtn.onclick = () => {
+        document
+          .querySelectorAll("input[type=checkbox]")
+          .forEach((cb) => (cb.checked = true));
+        range.value = 1000000;
+        priceVal.textContent = "1.000.000đ";
+        document.getElementById("sortSelect").value = "";
+        document.getElementById("search").value = "";
+        currentPage = 1;
+        updateDisplay(false, true);
+      };
+
+      // Lần đầu load
+      updateDisplay(false, false);
+    </script>
+
+    <style>
+      /* Skeleton loading */
+      .skeleton {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.5s ease;
+      }
+      .skeleton-img {
+        height: 180px;
+        background: linear-gradient(
+          90deg,
+          #f2f2f2 25%,
+          #e6e6e6 37%,
+          #f2f2f2 63%
+        );
+        background-size: 400% 100%;
+        animation: shimmer 1.4s ease infinite;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+      }
+      .skeleton-text {
+        height: 14px;
+        border-radius: 10px;
+        background: linear-gradient(
+          90deg,
+          #f2f2f2 25%,
+          #e6e6e6 37%,
+          #f2f2f2 63%
+        );
+        background-size: 400% 100%;
+        animation: shimmer 1.4s ease infinite;
+        margin-bottom: 0.5rem;
+      }
+      .skeleton-text.short {
+        width: 50%;
+      }
+      .skeleton-text.long {
+        width: 80%;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -400px 0;
+        }
+        100% {
+          background-position: 400px 0;
+        }
+      }
+    </style>
+  </body>
+</html>
