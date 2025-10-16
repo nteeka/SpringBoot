@@ -24,4 +24,9 @@ public class PageController {
     public String listPage() {
         return "Page/Product/list";
     }
+
+    @GetMapping("/product")
+    public String productPage() {
+        return "Page/Product/product";
+    }
 }

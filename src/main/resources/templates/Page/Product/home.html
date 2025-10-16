@@ -21,68 +21,6 @@
         line-height: 1.6;
         scroll-behavior: smooth;
       }
-      header {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-      }
-      .top-bar {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        font-size: 0.85rem;
-        padding: 0.4rem 0;
-        text-align: center;
-      }
-      nav {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.8rem 1.5rem;
-      }
-      .logo {
-        font-size: 1.6rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-decoration: none;
-      }
-      .nav-center {
-        display: flex;
-        gap: 2rem;
-        list-style: none;
-      }
-      .nav-center a {
-        text-decoration: none;
-        color: #2d3436;
-        font-weight: 500;
-        transition: color 0.3s;
-      }
-      .nav-center a:hover {
-        color: #667eea;
-      }
-      .nav-right {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-      }
-      .search-input {
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        padding: 0.4rem 0.8rem;
-        outline: none;
-        font-size: 0.9rem;
-      }
-      .icon-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1.2rem;
-      }
       .hero {
         height: 550px;
         background: url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80")
@@ -235,115 +173,11 @@
         opacity: 0.9;
         transform: translateY(-2px);
       }
-      /* FOOTER */
-      footer {
-        background: linear-gradient(135deg, #2d3436 0%, #34495e 100%);
-        color: #dfe6e9;
-        padding: 3rem 1.5rem 1.5rem;
-        margin-top: 5rem;
-      }
-      .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 3rem;
-        padding-bottom: 2rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      .footer-section h3 {
-        color: white;
-        margin-bottom: 1.5rem;
-        font-size: 1.2rem;
-      }
-      .footer-section h3::before {
-        background: white;
-      }
-      .footer-section p {
-        line-height: 1.8;
-        color: #b2bec3;
-      }
-      .footer-section a {
-        color: #b2bec3;
-        text-decoration: none;
-        display: block;
-        margin-bottom: 0.6rem;
-        transition: all 0.3s;
-      }
-      .footer-section a:hover {
-        color: white;
-        padding-left: 5px;
-      }
-      .footer-bottom {
-        text-align: center;
-        margin-top: 2rem;
-        font-size: 0.9rem;
-        color: #95a5a6;
-      }
-      .social-icons {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-      .social-icons a {
-        display: inline-flex;
-        transition: transform 0.3s;
-      }
-      .social-icons a:hover {
-        transform: scale(1.2);
-      }
-      #scrollTopBtn {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 45px;
-        height: 45px;
-        cursor: pointer;
-        font-size: 1.5rem;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s;
-      }
-      #scrollTopBtn:hover {
-        transform: translateY(-3px);
-      }
-      @keyframes fadeInUp {
-        0% {
-          opacity: 0;
-          transform: translateY(40px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
     </style>
   </head>
   <body>
-    <header>
-      <div class="top-bar">
-        📞 0901 234 567 | 🚚 Miễn phí vận chuyển đơn từ 500k
-      </div>
-      <nav>
-        <a href="#" class="logo">🌸 GreenLife</a>
-        <ul class="nav-center">
-          <li><a href="#home">Trang chủ</a></li>
-          <li><a href="#products">Sản phẩm</a></li>
-          <li><a href="#categories">Danh mục</a></li>
-          <li><a href="#contact">Liên hệ</a></li>
-        </ul>
-        <div class="nav-right">
-          <input class="search-input" type="text" placeholder="Tìm kiếm..." />
-          <button class="icon-btn">🛒</button>
-        </div>
-      </nav>
-    </header>
+    <!-- header -->
+    <div th:replace="common/header :: siteHeader"></div>
 
     <section class="hero" id="home">
       <div class="hero-content">
@@ -438,50 +272,8 @@
       </div>
     </section>
 
-    <footer>
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>Về GreenLife</h3>
-          <p>
-            Chúng tôi mang đến hoa và cây cảnh chất lượng cao, giúp không gian
-            sống thêm tươi mới và gần gũi thiên nhiên.
-          </p>
-        </div>
-        <div class="footer-section">
-          <h3>Liên kết nhanh</h3>
-          <a href="#">Trang chủ</a>
-          <a href="#">Sản phẩm</a>
-          <a href="#">Danh mục</a>
-          <a href="#">Liên hệ</a>
-        </div>
-        <div class="footer-section">
-          <h3>Liên hệ</h3>
-          <p>📍 123 Đường ABC, Q.1, TP.HCM</p>
-          <p>📞 0901 234 567</p>
-          <p>✉️ hello@greenlife.vn</p>
-          <div class="social-icons">
-            <a href="#"
-              ><img
-                src="https://cdn-icons-png.flaticon.com/512/174/174855.png"
-                width="24"
-                alt="fb"
-            /></a>
-            <a href="#"
-              ><img
-                src="https://cdn-icons-png.flaticon.com/512/174/174876.png"
-                width="24"
-                alt="insta"
-            /></a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        &copy; 2025 GreenLife. All rights reserved.
-      </div>
-    </footer>
-
     <button id="scrollTopBtn">⬆️</button>
-
+    <div th:replace="common/footer :: siteFooter"></div>
     <script>
       const scrollBtn = document.getElementById("scrollTopBtn");
       window.addEventListener("scroll", () => {

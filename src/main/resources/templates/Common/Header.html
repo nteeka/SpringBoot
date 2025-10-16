@@ -1,30 +1,52 @@
-<!DOCTYPE html>
-<html lang="vi">
-  <head>
-    <link rel="stylesheet" href="/css/Header.css" />
-  </head>
-  <body>
-    <!-- Header -->
-    <header>
-      <div class="header-container">
-        <a href="#" class="logo">
-          <i class="fas fa-rocket"></i>
-          <span class="logo-text">MyWebsite</span>
-        </a>
-
-        <div class="menu-toggle" onclick="toggleMenu()">
-          <i class="fas fa-bars"></i>
-        </div>
-
-        <nav id="mainNav">
-          <a href="#">Trang Chủ</a>
-          <a href="#">Dịch Vụ</a>
-          <a href="#">Về Chúng Tôi</a>
-          <a href="#">Liên Hệ</a>
-          <a href="#" class="header-btn">Đăng Nhập</a>
-        </nav>
+<!-- Header -->
+<header th:fragment="siteHeader">
+  <link rel="stylesheet" th:href="@{/css/Header.css}" />
+  <div class="top-bar">
+    📞 0901 234 567 | 🚚 Miễn phí vận chuyển đơn từ 500k
+  </div>
+  <nav>
+    <a href="#" class="logo">🌸 GreenLife</a>
+    <ul class="nav-center">
+      <li><a href="#">Trang chủ</a></li>
+      <li><a href="#" class="active">Sản phẩm</a></li>
+      <li><a href="#">Danh mục</a></li>
+      <li><a href="#">Liên hệ</a></li>
+    </ul>
+    <div class="nav-right">
+      <input class="search-input" type="text" placeholder="Tìm kiếm..." />
+      <div class="cart-container">
+        <button class="icon-btn" id="cartIcon" aria-label="Giỏ hàng">
+          <svg
+            id="cartSvg"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="cart-svg"
+          >
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path
+              d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+            ></path>
+          </svg>
+        </button>
+        <span id="cartCount" class="cart-count">0</span>
       </div>
-    </header>
-    <!-- <script th:src="@{/js/Register.js}"></script> -->
-  </body>
-</html>
+
+      <div id="miniCart" class="mini-cart hidden">
+        <h4>🧺 Giỏ hàng</h4>
+        <div id="miniCartItems" class="mini-cart-items"></div>
+        <div class="mini-cart-total">
+          <span>Tổng:</span>
+          <strong id="cartTotal">0đ</strong>
+        </div>
+        <button class="view-cart-btn">🧾 Xem giỏ hàng</button>
+      </div>
+    </div>
+  </nav>
+  <script th:src="@{/js/Header.js}" defer></script>
+</header>

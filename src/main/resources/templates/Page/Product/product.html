@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cây Kim Tiền - GreenLife</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        color: #2d3436;
+        background: #f8f9fa;
+        line-height: 1.6;
+      }
+
+      .product-detail {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .main-image {
+        width: 100%;
+        height: 500px;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        background: #f8f9fa;
+      }
+      .main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+      }
+      .main-image:hover img {
+        transform: scale(1.05);
+      }
+      .badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        z-index: 2;
+      }
+
+      .thumbnails {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+      .thumbnail {
+        height: 100px;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: all 0.3s;
+      }
+      .thumbnail:hover,
+      .thumbnail.active {
+        border-color: #667eea;
+      }
+      .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .product-info h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .stars {
+        color: #ffd700;
+        font-size: 1.2rem;
+      }
+      .review-count {
+        color: #6c757d;
+        font-size: 0.9rem;
+      }
+
+      .price-box {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin: 1.5rem 0;
+      }
+      .price {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #667eea;
+        display: flex;
+        align-items: baseline;
+        gap: 1rem;
+      }
+      .old-price {
+        font-size: 1.3rem;
+        color: #adb5bd;
+        text-decoration: line-through;
+        font-weight: 400;
+      }
+      .discount {
+        background: #ff6b6b;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: all 0.3s;
+      }
+      .feature-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+      }
+      .feature-icon {
+        font-size: 1.5rem;
+      }
+
+      .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .quantity-controls {
+        display: flex;
+        align-items: center;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .quantity-btn {
+        background: white;
+        border: none;
+        padding: 0.8rem 1.2rem;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: #667eea;
+        transition: all 0.3s;
+      }
+      .quantity-btn:hover {
+        background: #f8f9fa;
+      }
+      .quantity-input {
+        border: none;
+        width: 60px;
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .action-buttons {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .btn-add-cart {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      }
+      .btn-add-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+      .btn-wishlist {
+        background: white;
+        border: 2px solid #667eea;
+        color: #667eea;
+      }
+      .btn-wishlist:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      .guarantee {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e9ecef;
+        text-align: center;
+      }
+      .guarantee-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .tabs {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+      }
+      .tab-buttons {
+        display: flex;
+        gap: 1rem;
+        border-bottom: 2px solid #e9ecef;
+        background: white;
+        padding: 0 1.5rem;
+        border-radius: 15px 15px 0 0;
+      }
+      .tab-btn {
+        padding: 1rem 2rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-weight: 600;
+        color: #6c757d;
+        position: relative;
+        transition: all 0.3s;
+      }
+      .tab-btn.active {
+        color: #667eea;
+      }
+      .tab-btn.active::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+      }
+      .tab-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      }
+      .tab-pane {
+        display: none;
+      }
+      .tab-pane.active {
+        display: block;
+        animation: fadeIn 0.5s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .care-guide {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+      }
+      .care-item {
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 15px;
+        border-left: 4px solid #667eea;
+      }
+      .care-item h3 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .related-products {
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 0 1.5rem;
+      }
+      .section-title {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+      }
+      .related-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+      }
+      .product-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s;
+      }
+      .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+      }
+      .product-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+      .product-card-info {
+        padding: 1rem;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        animation: slideIn 0.3s ease;
+        z-index: 1000;
+        display: none;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+        }
+        to {
+          transform: translateX(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .product-detail,
+        .features,
+        .care-guide {
+          grid-template-columns: 1fr;
+        }
+        .related-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div th:replace="common/header :: siteHeader"></div>
+
+    <div class="product-detail">
+      <div class="gallery">
+        <div class="main-image">
+          <span class="badge">🔥 Bán chạy</span>
+          <img
+            id="mainImg"
+            src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=800&q=80"
+            alt="Cây Kim Tiền"
+          />
+        </div>
+        <div class="thumbnails">
+          <div class="thumbnail active">
+            <img
+              src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=200&q=80"
+              alt="Thumb 1"
+            />
+          </div>
+          <div class="thumbnail">
+            <img
+              src="https://images.unsplash.com/photo-1632207691143-643e2bc18390?auto=format&fit=crop&w=200&q=80"
+              alt="Thumb 2"
+            />
+          </div>
+          <div class="thumbnail">
+            <img
+              src="https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=200&q=80"
+              alt="Thumb 3"
+            />
+          </div>
+          <div class="thumbnail">
+            <img
+              src="https://images.unsplash.com/photo-1463320726281-696a485928c7?auto=format&fit=crop&w=200&q=80"
+              alt="Thumb 4"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="product-info">
+        <h1>Cây Kim Tiền - Zamioculcas</h1>
+        <div class="rating">
+          <div class="stars">★★★★★</div>
+          <span class="review-count">(128 đánh giá)</span>
+        </div>
+        <div class="price-box">
+          <div class="price">
+            <span>450.000đ</span>
+            <span class="old-price">650.000đ</span>
+            <span class="discount">-31%</span>
+          </div>
+        </div>
+        <p style="margin: 1.5rem 0; color: #495057">
+          Cây Kim Tiền là loại cây cảnh nội thất phổ biến với khả năng lọc không
+          khí tuyệt vời. Mang ý nghĩa may mắn, tài lộc trong phong thủy.
+        </p>
+        <div class="features">
+          <div class="feature-item">
+            <span class="feature-icon">🌱</span>
+            <div>
+              <strong>Dễ chăm sóc</strong><br /><small>Phù hợp người mới</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">💧</span>
+            <div>
+              <strong>Tưới ít nước</strong><br /><small>1-2 tuần/lần</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🏠</span>
+            <div>
+              <strong>Trong nhà</strong><br /><small>Chịu bóng tốt</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🌿</span>
+            <div>
+              <strong>Lọc không khí</strong><br /><small>Hấp thụ độc tố</small>
+            </div>
+          </div>
+        </div>
+        <div class="quantity-selector">
+          <span style="font-weight: 600">Số lượng:</span>
+          <div class="quantity-controls">
+            <button class="quantity-btn" id="decreaseBtn">−</button>
+            <input
+              type="number"
+              class="quantity-input"
+              id="quantityInput"
+              value="1"
+              min="1"
+              max="99"
+            />
+            <button class="quantity-btn" id="increaseBtn">+</button>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-add-cart" id="addToCartBtn">
+            🛒 Thêm vào giỏ hàng
+          </button>
+          <button class="btn btn-wishlist">❤️</button>
+        </div>
+        <div class="guarantee">
+          <div class="guarantee-item">
+            <div class="guarantee-icon">✅</div>
+            <small>Đảm bảo cây khỏe</small>
+          </div>
+          <div class="guarantee-item">
+            <div class="guarantee-icon">🚚</div>
+            <small>Giao hàng 2-4h</small>
+          </div>
+          <div class="guarantee-item">
+            <div class="guarantee-icon">🔄</div>
+            <small>Đổi trả 7 ngày</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="description">📝 Mô tả</button>
+        <button class="tab-btn" data-tab="care">🌿 Chăm sóc</button>
+        <button class="tab-btn" data-tab="reviews">⭐ Đánh giá</button>
+      </div>
+      <div class="tab-content">
+        <div class="tab-pane active" id="description">
+          <h3>Thông tin chi tiết</h3>
+          <p>
+            Cây Kim Tiền xuất xứ từ Đông Phi, là loại cây thuộc họ Ráy. Cây có
+            thân rễ củ to, lá xanh bóng mọc thành từng cặp đối xứng.
+          </p>
+          <ul style="margin: 1rem 0 0 1.5rem; line-height: 2">
+            <li>Chiều cao: 40-60cm</li>
+            <li>Chậu composite cao cấp Ø20cm</li>
+            <li>Độ phủ tán: 30-40cm</li>
+            <li>Ý nghĩa: May mắn, tài lộc</li>
+          </ul>
+        </div>
+        <div class="tab-pane" id="care">
+          <div class="care-guide">
+            <div class="care-item">
+              <h3>☀️ Ánh sáng</h3>
+              <p>Ưa ánh sáng gián tiếp, chịu bóng tốt. Tránh nắng trực tiếp.</p>
+            </div>
+            <div class="care-item">
+              <h3>💧 Tưới nước</h3>
+              <p>Tưới 1-2 tuần/lần, đợi đất khô. Tránh úng nước.</p>
+            </div>
+            <div class="care-item">
+              <h3>🌡️ Nhiệt độ</h3>
+              <p>18-26°C. Tránh nhiệt độ dưới 15°C.</p>
+            </div>
+            <div class="care-item">
+              <h3>🌱 Phân bón</h3>
+              <p>Bón loãng 1 tháng/lần vào mùa xuân-hè.</p>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="reviews">
+          <div style="border-bottom: 1px solid #e9ecef; padding: 1.5rem 0">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 0.5rem;
+              "
+            >
+              <div>
+                <strong>Nguyễn Thu Hà</strong>
+                <div class="stars" style="font-size: 1rem">★★★★★</div>
+              </div>
+              <small style="color: #6c757d">15/10/2025</small>
+            </div>
+            <p>
+              Cây rất đẹp, tươi tốt, đóng gói cẩn thận. Shop tư vấn nhiệt tình!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="related-products">
+      <h2 class="section-title">Sản Phẩm Liên Quan</h2>
+      <div class="related-grid">
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=400&q=80"
+            alt="Trầu Bà"
+          />
+          <div class="product-card-info">
+            <h3>Cây Trầu Bà Leo</h3>
+            <div class="price">280.000đ</div>
+          </div>
+        </div>
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1585681442743-0d6c0eb0870c?auto=format&fit=crop&w=400&q=80"
+            alt="Lưỡi Hổ"
+          />
+          <div class="product-card-info">
+            <h3>Cây Lưỡi Hổ Vàng</h3>
+            <div class="price">350.000đ</div>
+          </div>
+        </div>
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=400&q=80"
+            alt="Phát Tài"
+          />
+          <div class="product-card-info">
+            <h3>Cây Phát Tài Núi</h3>
+            <div class="price">520.000đ</div>
+          </div>
+        </div>
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1597305877032-0668b3c6413a?auto=format&fit=crop&w=400&q=80"
+            alt="Ngọc Ngân"
+          />
+          <div class="product-card-info">
+            <h3>Cây Ngọc Ngân</h3>
+            <div class="price">380.000đ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🌿 Chat Hỏi Đáp -->
+    <div id="qa-widget">
+      <button id="qa-toggle">💬 Hỏi đáp</button>
+
+      <div id="qa-box">
+        <div id="qa-header">💬 Hỏi đáp cùng GreenLife</div>
+        <div id="qa-messages"></div>
+
+        <form id="qa-form">
+          <input
+            type="text"
+            id="qa-input"
+            placeholder="Nhập câu hỏi của bạn..."
+            required
+          />
+          <button type="submit">Gửi</button>
+        </form>
+      </div>
+    </div>
+
+    <style>
+      /* --- Hỏi đáp nổi góc phải --- */
+      #qa-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        font-family: "Poppins", sans-serif;
+        z-index: 9999;
+      }
+
+      #qa-toggle {
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: 0.3s;
+      }
+      #qa-toggle:hover {
+        background: #43a047;
+        transform: scale(1.05);
+      }
+
+      #qa-box {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        bottom: 60px;
+        right: 0;
+        width: 320px;
+        height: 400px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        animation: fadeIn 0.3s ease;
+      }
+
+      #qa-header {
+        background: linear-gradient(135deg, #81c784, #388e3c);
+        color: white;
+        padding: 12px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      #qa-messages {
+        flex: 1;
+        padding: 10px;
+        overflow-y: auto;
+        font-size: 0.9rem;
+      }
+
+      #qa-form {
+        display: flex;
+        border-top: 1px solid #eee;
+      }
+
+      #qa-input {
+        flex: 1;
+        border: none;
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+
+      #qa-form button {
+        background: #4caf50;
+        border: none;
+        color: white;
+        padding: 0 15px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      #qa-form button:hover {
+        background: #43a047;
+      }
+
+      .msg-user,
+      .msg-bot {
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        max-width: 80%;
+        word-wrap: break-word;
+      }
+      .msg-user {
+        background: #e8f5e9;
+        align-self: flex-end;
+        margin-left: auto;
+      }
+      .msg-bot {
+        background: #f1f8e9;
+        align-self: flex-start;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+
+    <script>
+      const qaToggle = document.getElementById("qa-toggle");
+      const qaBox = document.getElementById("qa-box");
+      const qaForm = document.getElementById("qa-form");
+      const qaInput = document.getElementById("qa-input");
+      const qaMessages = document.getElementById("qa-messages");
+
+      qaToggle.addEventListener("click", () => {
+        qaBox.style.display = qaBox.style.display === "flex" ? "none" : "flex";
+      });
+
+      qaForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = qaInput.value.trim();
+        if (!text) return;
+
+        const userMsg = document.createElement("div");
+        userMsg.className = "msg-user";
+        userMsg.textContent = text;
+        qaMessages.appendChild(userMsg);
+
+        qaInput.value = "";
+        qaMessages.scrollTop = qaMessages.scrollHeight;
+
+        // Giả lập trả lời tự động (bạn có thể thay bằng API thật)
+        setTimeout(() => {
+          const botMsg = document.createElement("div");
+          botMsg.className = "msg-bot";
+
+          if (text.toLowerCase().includes("giá")) {
+            botMsg.textContent =
+              "🌿 Cây Kim Tiền hiện có giá 250.000đ bạn nhé!";
+          } else if (text.toLowerCase().includes("giao hàng")) {
+            botMsg.textContent =
+              "🚚 GreenLife giao hàng toàn quốc trong 2–3 ngày.";
+          } else if (text.toLowerCase().includes("chăm sóc")) {
+            botMsg.textContent =
+              "💧 Cây Kim Tiền ưa sáng nhẹ, tưới 1–2 lần/tuần.";
+          } else {
+            botMsg.textContent =
+              "🌱 Cảm ơn bạn! Shop sẽ phản hồi chi tiết sớm nhất.";
+          }
+
+          qaMessages.appendChild(botMsg);
+          qaMessages.scrollTop = qaMessages.scrollHeight;
+        }, 800);
+      });
+    </script>
+
+    <!-- 🌿 Liên hệ mạng xã hội -->
+    <div id="social-icons">
+      <!-- Facebook -->
+      <a
+        href="https://www.facebook.com/GreenLife.vn"
+        target="_blank"
+        class="social-icon fb"
+        title="Facebook"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 320 512"
+          width="22"
+          height="22"
+          fill="white"
+        >
+          <path
+            d="M279.14 288l14.22-92.66h-88.91V127.34c0-25.35 
+          12.42-50.06 52.24-50.06H293V6.26S259.43 
+          0 225.36 0c-73.22 0-121.09 44.38-121.09 
+          124.72v70.62H22.89V288h81.38v224h100.17V288z"
+          />
+        </svg>
+      </a>
+
+      <!-- Zalo -->
+      <a
+        href="https://zalo.me/0123456789"
+        target="_blank"
+        class="social-icon zalo"
+        title="Zalo"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
+          alt="Zalo"
+          width="22"
+          height="22"
+        />
+      </a>
+    </div>
+
+    <style>
+      #social-icons {
+        position: fixed;
+        bottom: 100px;
+        left: 20px; /* đổi thành right:20px nếu muốn nằm bên phải */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 9999;
+      }
+
+      .social-icon {
+        text-decoration: none;
+        background: #333;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        transition: transform 0.25s, box-shadow 0.25s;
+      }
+
+      .social-icon img,
+      .social-icon svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .social-icon.fb {
+        background: #1877f2;
+      }
+      .social-icon.zalo {
+        background: #0068ff;
+      }
+      .social-icon.ig {
+        background: radial-gradient(
+          circle at 30% 107%,
+          #fdf497 0%,
+          #fdf497 5%,
+          #fd5949 45%,
+          #d6249f 60%,
+          #285aeb 90%
+        );
+      }
+
+      .social-icon:hover {
+        transform: scale(1.15) rotate(5deg);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+
+    <div id="toast" class="toast">✅ Đã thêm vào giỏ hàng!</div>
+    <div th:replace="common/footer :: siteFooter"></div>
+
+    <script>
+      const thumbnails = document.querySelectorAll(".thumbnail");
+      const mainImg = document.getElementById("mainImg");
+      thumbnails.forEach((t) =>
+        t.addEventListener("click", function () {
+          thumbnails.forEach((x) => x.classList.remove("active"));
+          this.classList.add("active");
+          mainImg.src = this.querySelector("img").src.replace("w=200", "w=800");
+        })
+      );
+
+      const qty = document.getElementById("quantityInput");
+      document.getElementById("decreaseBtn").onclick = () => {
+        if (qty.value > 1) qty.value--;
+      };
+      document.getElementById("increaseBtn").onclick = () => {
+        if (qty.value < 99) qty.value++;
+      };
+
+      document.getElementById("addToCartBtn").onclick = () => {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => (toast.style.display = "none"), 3000);
+      };
+
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((b) => b.classList.remove("active"));
+          document
+            .querySelectorAll(".tab-pane")
+            .forEach((p) => p.classList.remove("active"));
+          this.classList.add("active");
+          document.getElementById(this.dataset.tab).classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>
