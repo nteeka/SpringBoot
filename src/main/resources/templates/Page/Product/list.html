@@ -14,13 +14,86 @@
     <!-- header -->
     <div th:replace="common/header :: siteHeader"></div>
 
-    <section class="page-banner">
-      <h1>Danh Sách Sản Phẩm</h1>
-      <p>Khám phá các loại hoa, cây cảnh & phụ kiện được yêu thích nhất</p>
-    </section>
+    <!-- Sticky Search Bar -->
+    <div class="sticky-search-container" id="stickySearch">
+      <div class="compact-search-wrapper">
+        <div class="search-row">
+          <!-- Search Box -->
+          <div class="search-box-enhanced">
+            <div class="search-input-container">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="search"
+                placeholder="Tìm theo tên hoa, loại sản phẩm..."
+                autocomplete="off"
+              />
+              <button class="clear-search-btn" id="clearSearchBtn" title="Xóa">
+                ✕
+              </button>
+              <button
+                class="voice-search-btn"
+                id="voiceSearchBtn"
+                title="Tìm bằng giọng nói"
+              >
+                🎤
+              </button>
+            </div>
+            <!-- Suggestions Dropdown -->
+            <ul id="suggestions" class="suggestions-list"></ul>
+          </div>
 
+          <!-- Filter Toggle Button -->
+          <button class="filter-toggle-btn" id="filterToggleBtn">
+            <span>🎯 Bộ lọc</span>
+            <span class="filter-count" id="filterCount">0</span>
+          </button>
+        </div>
+
+        <!-- Quick Search Tags -->
+        <div class="inline-quick-tags">
+          <span class="quick-tag-label">Tìm nhanh:</span>
+          <div class="tag-scroll">
+            <span class="search-tag" data-query="hoa hồng">🌹 Hoa hồng</span>
+            <span class="search-tag" data-query="tulip">🌷 Tulip</span>
+            <span class="search-tag" data-query="cây cảnh">🌿 Cây cảnh</span>
+            <span class="search-tag" data-query="hướng dương"
+              >🌻 Hướng dương</span
+            >
+            <span class="search-tag" data-query="dưới 200k">💸 Dưới 200k</span>
+          </div>
+        </div>
+
+        <!-- Advanced Filters Buttons -->
+        <div class="advanced-filters">
+          <button class="advanced-filter-btn" data-filter="occasion">
+            🎉 Dịp lễ
+          </button>
+          <button class="advanced-filter-btn" data-filter="flower-type">
+            🌸 Loại hoa
+          </button>
+          <button class="advanced-filter-btn" data-filter="style">
+            🎨 Phong cách
+          </button>
+          <button class="advanced-filter-btn" data-filter="price-range">
+            💰 Mức giá
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Overlay (Mobile) -->
+    <div class="filter-overlay" id="filterOverlay"></div>
+
+    <!-- Main Content -->
     <main>
-      <aside>
+      <!-- Sidebar Filter -->
+      <aside id="filterSidebar">
+        <div class="filter-header">
+          <div class="filter-title">🎯 Bộ lọc</div>
+          <button class="close-filter-btn" id="closeFilterBtn">✕</button>
+        </div>
+
         <details open>
           <summary>🪴 Loại sản phẩm</summary>
           <label><input type="checkbox" value="hoa" checked /> Hoa</label>
@@ -55,37 +128,39 @@
           </select>
         </details>
 
-        <button class="apply-btn" id="applyFilters">🔍 Áp dụng bộ lọc</button>
+        <button class="apply-btn" id="applyFilters">🔍 Áp dụng</button>
         <button class="reset-btn" id="resetFilters">🧹 Đặt lại</button>
       </aside>
 
-      <section class="products">
-        <div class="quick-filters">
-          <button data-type="hoa" class="active">🌼 Hoa</button>
-          <button data-type="cay">🌿 Cây cảnh</button>
-          <button data-type="phukien">💧 Phụ kiện</button>
-        </div>
-
-        <div class="filter-bar search-wrapper">
-          <div class="search-box">
-            <input
-              type="text"
-              id="search"
-              placeholder="Nhập tên sản phẩm..."
-              autocomplete="off"
-            />
-            <ul id="suggestions" class="suggestions-list"></ul>
+      <!-- Products Section -->
+      <section class="products" id="productsSection">
+        <!-- Results Header -->
+        <div class="results-header">
+          <div class="results-info">
+            <span class="results-count" id="resultsCount">20</span>
+            <span class="results-text">sản phẩm</span>
+            <span class="search-time" id="searchTime"></span>
+          </div>
+          <div class="view-toggle">
+            <button class="view-btn active" title="Lưới">⊞</button>
+            <button class="view-btn" title="Danh sách">☰</button>
           </div>
         </div>
 
-        <div class="grid" id="productGrid"></div>
+        <!-- Product Grid -->
+        <div class="grid" id="productGrid">
+          <!-- Products render by JS -->
+        </div>
+
+        <!-- Pagination -->
         <div class="pagination" id="pagination"></div>
       </section>
     </main>
+
     <!-- Toast Notification Container -->
     <div id="toastContainer" class="toast-container"></div>
-    <!-- Âm thanh thông báo -->
-    <!-- Âm thanh thông báo ổn định -->
+
+    <!-- Sounds -->
     <audio
       id="soundAdd"
       src="https://cdn.jsdelivr.net/gh/naptha/tin-sounds@master/sounds/pop.mp3"
@@ -96,11 +171,8 @@
       src="https://cdn.jsdelivr.net/gh/naptha/tin-sounds@master/sounds/click.mp3"
       preload="auto"
     ></audio>
-    <!-- <audio id="soundAdd" src="/sounds/add.mp3"></audio>
-    <audio id="soundRemove" src="/sounds/remove.mp3"></audio> -->
-    <script th:src="@{/js/list.js}" defer></script>
-  </body>
 
-  <!-- FOOTER -->
-  <div th:replace="common/footer :: siteFooter"></div>
+    <script th:src="@{/js/list.js}" defer></script>
+    <div th:replace="common/footer :: siteFooter"></div>
+  </body>
 </html>

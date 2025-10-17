@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh Mục Hoa - GreenLife</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(180deg, #fef9f3 0%, #fff 100%);
+        color: #2d3436;
+        padding: 2rem 0;
+      }
+
+      /* Hero */
+      .hero {
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.1),
+          rgba(118, 75, 162, 0.1)
+        );
+        padding: 3rem 1.5rem 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+        color: #2d3436;
+        margin-bottom: 0.5rem;
+      }
+      .hero p {
+        color: #636e72;
+        font-size: 1.1rem;
+      }
+
+      /* Popular Topics */
+      .popular-topics {
+        margin-top: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+
+      .topic-label {
+        font-size: 0.85rem;
+        color: #636e72;
+        font-weight: 500;
+      }
+
+      .topic-tag {
+        background: linear-gradient(135deg, #667eea10, #764ba210);
+        color: #667eea;
+        padding: 0.4rem 0.9rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+      }
+
+      .topic-tag:hover {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      /* Search Filters */
+      .search-filters {
+        margin-top: 1.2rem;
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #f8f9fa;
+        border-radius: 25px;
+        font-size: 0.85rem;
+        color: #636e72;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .filter-chip:hover,
+      .filter-chip.active {
+        background: white;
+        border-color: #667eea;
+        color: #667eea;
+        transform: translateY(-2px);
+      }
+
+      .filter-chip-icon {
+        font-size: 1rem;
+      }
+
+      /* Loading State */
+      .search-loading {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+        color: #636e72;
+      }
+
+      .search-loading.active {
+        display: block;
+      }
+
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .search-container {
+          padding: 1.5rem;
+        }
+
+        .popular-topics {
+          gap: 0.5rem;
+        }
+
+        .topic-tag {
+          font-size: 0.8rem;
+          padding: 0.35rem 0.8rem;
+        }
+
+        .search-filters {
+          gap: 0.6rem;
+        }
+      }
+
+      /* Quick Filter */
+      .quick-filter {
+        max-width: 1200px;
+        margin: 0 auto 2rem;
+        padding: 0 1.5rem;
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .filter-btn {
+        background: white;
+        border: 2px solid #e9ecef;
+        padding: 0.6rem 1.2rem;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #636e72;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-color: transparent;
+        transform: translateY(-2px);
+      }
+
+      /* Container */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+      .section-title {
+        font-size: 1.6rem;
+        margin: 3rem 0 1.5rem;
+        color: #2d3436;
+        position: relative;
+        padding-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .section-title::after {
+        content: "";
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(90deg, #667eea, transparent);
+        margin-left: 1rem;
+      }
+
+      /* Category Grid */
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .category-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        border: 2px solid transparent;
+      }
+      .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
+        border-color: #667eea;
+      }
+      .category-img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        transition: transform 0.3s;
+      }
+      .category-card:hover .category-img {
+        transform: scale(1.08);
+      }
+      .category-info {
+        padding: 1rem;
+      }
+      .category-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2d3436;
+        margin-bottom: 0.4rem;
+      }
+      .category-desc {
+        color: #636e72;
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+        line-height: 1.4;
+      }
+      .category-count {
+        color: #667eea;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+      .category-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 0.25rem 0.7rem;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #667eea;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+      .badge-hot {
+        background: #ff4757;
+        color: white;
+      }
+      .badge-new {
+        background: #5f27cd;
+        color: white;
+      }
+
+      /* Featured Grid */
+      .featured-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+      .featured-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+      .featured-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+      }
+      .featured-img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+      }
+      .featured-info {
+        padding: 1.5rem;
+      }
+      .featured-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 0.5rem;
+      }
+      .featured-desc {
+        color: #636e72;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2rem;
+        }
+        .category-grid {
+          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        }
+        .featured-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <h1>🌺 Khám Phá Bộ Sưu Tập Hoa</h1>
+      <p>Chọn hoa phù hợp cho mọi dịp và không gian của bạn</p>
+    </div>
+
+    <div class="container">
+      <!-- Nổi bật -->
+      <h2 class="section-title">⭐ Bộ Sưu Tập Nổi Bật</h2>
+      <div class="featured-grid">
+        <div class="featured-card">
+          <span class="category-badge badge-hot">🔥 Hot</span>
+          <img
+            src="https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00"
+            alt="Sinh Nhật"
+            class="featured-img"
+          />
+          <div class="featured-info">
+            <h3 class="featured-name">🎂 Hoa Sinh Nhật Premium</h3>
+            <p class="featured-desc">Thiết kế sang trọng cho ngày đặc biệt</p>
+            <span class="category-count">247 sản phẩm từ 299k</span>
+          </div>
+        </div>
+        <div class="featured-card">
+          <span class="category-badge badge-new">✨ Mới</span>
+          <img
+            src="https://images.unsplash.com/photo-1606041008023-472dfb5e530f"
+            alt="Tết"
+            class="featured-img"
+          />
+          <div class="featured-info">
+            <h3 class="featured-name">🧧 Hoa Tết 2025</h3>
+            <p class="featured-desc">Mai, đào, kumquat đón Xuân thịnh vượng</p>
+            <span class="category-count">198 sản phẩm từ 450k</span>
+          </div>
+        </div>
+        <div class="featured-card">
+          <img
+            src="https://images.unsplash.com/photo-1487070183336-b863922373d4"
+            alt="Khai Trương"
+            class="featured-img"
+          />
+          <div class="featured-info">
+            <h3 class="featured-name">🎊 Hoa Khai Trương</h3>
+            <p class="featured-desc">Lan, kệ hoa chúc mừng cao cấp</p>
+            <span class="category-count">156 sản phẩm từ 800k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theo Dịp -->
+      <h2 class="section-title">🎉 Hoa Theo Dịp Lễ</h2>
+      <div class="category-grid">
+        <div class="category-card">
+          <span class="category-badge">Best seller</span>
+          <img
+            src="https://images.unsplash.com/photo-1522771930-78848d9293e8"
+            alt="Valentine"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💕 Valentine</h3>
+            <p class="category-desc">Hồng đỏ, tulip - tình yêu nồng nàn</p>
+            <span class="category-count">189 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6"
+            alt="Ngày Mẹ"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">👩 Ngày của Mẹ</h3>
+            <p class="category-desc">Cẩm chướng, cẩm tú cầu</p>
+            <span class="category-count">134 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1490750967868-88aa4486c946"
+            alt="8/3"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🌹 8/3 Quốc Tế Phụ Nữ</h3>
+            <p class="category-desc">Hồng, ly, tulip tri ân</p>
+            <span class="category-count">167 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1455659817273-f96807779a8a"
+            alt="20/10"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💐 20/10 Phụ Nữ VN</h3>
+            <p class="category-desc">Đa dạng màu sắc tươi đẹp</p>
+            <span class="category-count">145 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42"
+            alt="Tốt Nghiệp"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🎓 Tốt Nghiệp</h3>
+            <p class="category-desc">Hồng, baby thanh lịch</p>
+            <span class="category-count">98 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1508610048659-a06b669e3321"
+            alt="Kỷ Niệm"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💍 Kỷ Niệm</h3>
+            <p class="category-desc">Hồng cao cấp sang trọng</p>
+            <span class="category-count">112 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1464297162577-f5295c892194"
+            alt="Cưới"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💒 Cưới Hỏi</h3>
+            <p class="category-desc">Cầm tay cô dâu, trang trí</p>
+            <span class="category-count">176 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1458459410410-c9edff2071fe"
+            alt="Thăm Bệnh"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🏥 Thăm Bệnh</h3>
+            <p class="category-desc">Nhẹ nhàng, gửi tâm tình</p>
+            <span class="category-count">87 sản phẩm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theo Loại -->
+      <h2 class="section-title">🌸 Loại Hoa Yêu Thích</h2>
+      <div class="category-grid">
+        <div class="category-card">
+          <span class="category-badge badge-hot">Top 1</span>
+          <img
+            src="https://images.unsplash.com/photo-1518709414768-a88981a4515d"
+            alt="Hồng"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🌹 Hoa Hồng</h3>
+            <p class="category-desc">Nữ hoàng các loài hoa</p>
+            <span class="category-count">284 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1551388584-e7c6c27ef722"
+            alt="Lan"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🦋 Lan Hồ Điệp</h3>
+            <p class="category-desc">Sang trọng quý phái</p>
+            <span class="category-count">156 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd"
+            alt="Tulip"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🌷 Hoa Tulip</h3>
+            <p class="category-desc">Nhập khẩu Hà Lan</p>
+            <span class="category-count">92 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1523693916903-027d144a2b7d"
+            alt="Ly"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🤍 Hoa Ly</h3>
+            <p class="category-desc">Trắng tinh khôi thơm</p>
+            <span class="category-count">118 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1597437893808-f5a04b3a9e7d"
+            alt="Hướng Dương"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🌻 Hướng Dương</h3>
+            <p class="category-desc">Tươi vui năng lượng</p>
+            <span class="category-count">105 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1594671233837-f2ce0ce9258a"
+            alt="Cẩm Tú Cầu"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💙 Cẩm Tú Cầu</h3>
+            <p class="category-desc">Pastel dịu dàng</p>
+            <span class="category-count">89 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1587814213271-74b8e290f0e3"
+            alt="Cẩm Chướng"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🌺 Cẩm Chướng</h3>
+            <p class="category-desc">Bền lâu đa màu</p>
+            <span class="category-count">142 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11"
+            alt="Baby"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">☁️ Hoa Baby</h3>
+            <p class="category-desc">Trang trí bó hoa</p>
+            <span class="category-count">67 sản phẩm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phong Cách -->
+      <h2 class="section-title">🎨 Theo Phong Cách</h2>
+      <div class="category-grid">
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1487070183336-b863922373d4"
+            alt="Sang Trọng"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">👑 Sang Trọng</h3>
+            <p class="category-desc">Nhập khẩu cao cấp</p>
+            <span class="category-count">78 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1561181286-d3fee7d55364"
+            alt="Vintage"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🕰️ Vintage</h3>
+            <p class="category-desc">Pastel retro lãng mạn</p>
+            <span class="category-count">94 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1563968743333-044cef800494"
+            alt="Hiện Đại"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">✨ Hiện Đại</h3>
+            <p class="category-desc">Tối giản tinh tế</p>
+            <span class="category-count">112 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1455659817273-f96807779a8a"
+            alt="Rustic"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🌿 Rustic</h3>
+            <p class="category-desc">Vườn nông thôn</p>
+            <span class="category-count">86 sản phẩm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mức Giá -->
+      <h2 class="section-title">💰 Theo Mức Giá</h2>
+      <div class="category-grid">
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1588181754513-c5e0c1ec6c96"
+            alt="<500k"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💸 Dưới 500k</h3>
+            <p class="category-desc">Giá phải chăng</p>
+            <span class="category-count">234 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1471286274405-579f8d7132d8"
+            alt="500k-1tr"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💵 500k - 1tr</h3>
+            <p class="category-desc">Đa dạng lựa chọn</p>
+            <span class="category-count">198 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa"
+            alt="1tr-2tr"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💴 1tr - 2tr</h3>
+            <p class="category-desc">Cao cấp sang trọng</p>
+            <span class="category-count">142 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1429734956993-8a9b0555e122"
+            alt=">2tr"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">💎 Trên 2tr</h3>
+            <p class="category-desc">VIP đặc biệt</p>
+            <span class="category-count">89 sản phẩm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cây Cảnh -->
+      <h2 class="section-title">🪴 Cây Cảnh & Combo</h2>
+      <div class="category-grid">
+        <div class="category-card">
+          <span class="category-badge">Phong thủy</span>
+          <img
+            src="https://images.unsplash.com/photo-1459156212016-c812468e2115"
+            alt="Phong Thủy"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">☘️ Cây Phong Thủy</h3>
+            <p class="category-desc">Kim tiền, tài lộc</p>
+            <span class="category-count">124 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1463320726281-696a485928c7"
+            alt="Để Bàn"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🌱 Cây Để Bàn</h3>
+            <p class="category-desc">Sen đá, xương rồng</p>
+            <span class="category-count">156 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1485955900006-10f4d324d411"
+            alt="Trong Nhà"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🏡 Trang Trí Nội Thất</h3>
+            <p class="category-desc">Lọc không khí</p>
+            <span class="category-count">98 sản phẩm</span>
+          </div>
+        </div>
+        <div class="category-card">
+          <span class="category-badge badge-hot">Tiết kiệm</span>
+          <img
+            src="https://images.unsplash.com/photo-1455659817273-f96807779a8a"
+            alt="Combo"
+            class="category-img"
+          />
+          <div class="category-info">
+            <h3 class="category-name">🎁 Combo Ưu Đãi</h3>
+            <p class="category-desc">Hoa + cây giảm 30%</p>
+            <span class="category-count">76 sản phẩm</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const cards = document.querySelectorAll(
+          ".category-card, .featured-card"
+        );
+        cards.forEach((card, idx) => {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+          setTimeout(() => {
+            card.style.transition = "all 0.5s ease";
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0)";
+          }, idx * 50);
+        });
+
+        cards.forEach((card) => {
+          card.addEventListener("click", () => {
+            const name = card.querySelector(
+              ".category-name, .featured-name"
+            ).textContent;
+            alert(`Xem: ${name}\n(Sẽ chuyển đến trang sản phẩm)`);
+          });
+        });
+
+        // Filter buttons
+        const filterBtns = document.querySelectorAll(".filter-btn");
+        filterBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            filterBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+          });
+        });
+      });
+    </script>
+    <script>
+      // Search Functionality
+      const searchInput = document.getElementById("searchInput");
+      const searchSuggestions = document.getElementById("searchSuggestions");
+      const voiceBtn = document.getElementById("voiceBtn");
+      const searchLoading = document.getElementById("searchLoading");
+
+      // Show/Hide suggestions
+      searchInput.addEventListener("focus", () => {
+        searchSuggestions.classList.add("active");
+      });
+
+      searchInput.addEventListener("input", (e) => {
+        if (e.target.value.length > 0) {
+          searchSuggestions.classList.add("active");
+          // Có thể thêm logic lọc suggestions theo input
+        }
+      });
+
+      // Click outside to close
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".search-container")) {
+          searchSuggestions.classList.remove("active");
+        }
+      });
+
+      // Suggestion item click
+      document.querySelectorAll(".suggestion-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const keyword = item.dataset.keyword;
+          searchInput.value = keyword;
+          searchSuggestions.classList.remove("active");
+          performSearch(keyword);
+        });
+      });
+
+      // Topic tag click
+      document.querySelectorAll(".topic-tag").forEach((tag) => {
+        tag.addEventListener("click", () => {
+          const topic = tag.dataset.topic;
+          searchInput.value = topic;
+          performSearch(topic);
+        });
+      });
+
+      // Filter chip click
+      document.querySelectorAll(".filter-chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          chip.classList.toggle("active");
+          const filter = chip.dataset.filter;
+          console.log("Filter selected:", filter);
+          // Có thể thêm logic hiển thị modal filter
+        });
+      });
+
+      // Voice search
+      voiceBtn.addEventListener("click", () => {
+        if (
+          "webkitSpeechRecognition" in window ||
+          "SpeechRecognition" in window
+        ) {
+          const SpeechRecognition =
+            window.SpeechRecognition || window.webkitSpeechRecognition;
+          const recognition = new SpeechRecognition();
+          recognition.lang = "vi-VN";
+
+          recognition.onstart = () => {
+            voiceBtn.classList.add("listening");
+            voiceBtn.textContent = "🔴";
+          };
+
+          recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            searchInput.value = transcript;
+            performSearch(transcript);
+          };
+
+          recognition.onend = () => {
+            voiceBtn.classList.remove("listening");
+            voiceBtn.textContent = "🎤";
+          };
+
+          recognition.onerror = () => {
+            voiceBtn.classList.remove("listening");
+            voiceBtn.textContent = "🎤";
+            alert("Không thể sử dụng tính năng giọng nói");
+          };
+
+          recognition.start();
+        } else {
+          alert("Trình duyệt không hỗ trợ tìm kiếm bằng giọng nói");
+        }
+      });
+
+      // Search function
+      function performSearch(keyword) {
+        searchLoading.classList.add("active");
+
+        // Simulate search delay
+        setTimeout(() => {
+          searchLoading.classList.remove("active");
+          alert(`Tìm kiếm: "${keyword}"\n(Sẽ hiển thị kết quả tìm kiếm)`);
+        }, 800);
+      }
+
+      // Enter key to search
+      searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && searchInput.value.trim()) {
+          searchSuggestions.classList.remove("active");
+          performSearch(searchInput.value.trim());
+        }
+      });
+    </script>
+  </body>
+</html>

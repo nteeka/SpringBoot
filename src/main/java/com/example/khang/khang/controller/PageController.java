@@ -29,4 +29,9 @@ public class PageController {
     public String productPage() {
         return "Page/Product/product";
     }
+
+    @GetMapping("/category")
+    public String categoryPage() {
+        return "Page/Product/category";
+    }
 }
