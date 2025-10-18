@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi Tiết Đơn Hàng - GreenLife v2</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f9fafc;
+        color: #1e293b;
+        line-height: 1.6;
+        animation: fadeIn 0.6s ease-in;
+      }
+
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .header h1 {
+        font-size: 1.9rem;
+        margin-bottom: 0.3rem;
+      }
+      .header .order-id {
+        font-size: 1.05rem;
+        opacity: 0.9;
+      }
+
+      /* Container */
+      .container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      a.back-link {
+        display: inline-block;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      a.back-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Timeline */
+      .status-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      }
+      .timeline {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin: 2rem 0;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: #e2e8f0;
+        z-index: 0;
+      }
+      .timeline-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+      .timeline-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+        font-size: 1.2rem;
+        transition: 0.3s;
+      }
+      .timeline-step.completed .timeline-icon {
+        background: #10b981;
+        color: white;
+      }
+      .timeline-step.active .timeline-icon {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        animation: pulse 1.4s infinite alternate;
+      }
+      .timeline-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #475569;
+      }
+      .timeline-step.active .timeline-label {
+        color: #667eea;
+      }
+
+      @keyframes pulse {
+        from {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.6);
+        }
+        to {
+          transform: scale(1.15);
+          box-shadow: 0 0 15px 6px rgba(102, 126, 234, 0.25);
+        }
+      }
+
+      /* Info Cards */
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .info-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+      .info-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f1f3f5;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-label {
+        color: #64748b;
+        font-size: 0.9rem;
+      }
+      .info-value {
+        font-weight: 600;
+      }
+
+      /* Product List */
+      .products-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+      .products-section h3 {
+        margin-bottom: 1.5rem;
+      }
+      .product-item {
+        display: grid;
+        grid-template-columns: 80px 1fr auto;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+      }
+      .product-item img {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+      .product-info h4 {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+      }
+      .product-price {
+        color: #667eea;
+        font-weight: 600;
+      }
+      .product-total {
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      /* Summary */
+      .summary {
+        background: #f8f9ff;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.4rem 0;
+      }
+      .summary-row.total {
+        border-top: 2px solid #667eea;
+        margin-top: 0.5rem;
+        padding-top: 0.8rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #667eea;
+      }
+
+      /* Actions */
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      .btn {
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+      .btn-primary:hover {
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        transform: translateY(-2px);
+      }
+      .btn-outline {
+        border: 2px solid #667eea;
+        color: #667eea;
+        background: white;
+      }
+      .btn-outline:hover {
+        background: #667eea;
+        color: white;
+      }
+      .btn-cancel {
+        background: #ef4444;
+        color: white;
+      }
+      .btn-cancel:hover {
+        background: #dc2626;
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #333;
+        color: white;
+        padding: 1rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: toastFadeIn 0.4s forwards;
+        z-index: 9999;
+      }
+      @keyframes toastFadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .timeline {
+          flex-direction: column;
+          gap: 1.2rem;
+        }
+        .timeline::before {
+          display: none;
+        }
+        .product-item {
+          grid-template-columns: 60px 1fr;
+        }
+        .product-total {
+          text-align: right;
+          grid-column: 2;
+        }
+        .actions {
+          flex-direction: column;
+        }
+        .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div th:replace="common/header :: siteHeader"></div>
+
+    <div class="header">
+      <h1>📦 Chi Tiết Đơn Hàng</h1>
+      <div class="order-id">Mã đơn: <strong>#GH20251018001</strong></div>
+    </div>
+
+    <div class="container">
+      <a href="listOrder" class="back-link">← Quay lại danh sách đơn hàng</a>
+
+      <!-- Timeline -->
+      <div class="status-section">
+        <h3>🚚 Trạng thái đơn hàng</h3>
+        <div class="timeline" id="orderTimeline"></div>
+      </div>
+
+      <!-- Info -->
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>👤 Thông tin khách hàng</h3>
+          <div class="info-row">
+            <span class="info-label">Họ tên:</span>
+            <span class="info-value">Nguyễn Văn A</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Điện thoại:</span>
+            <span class="info-value">0901 234 567</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email:</span>
+            <span class="info-value">nguyenvana@email.com</span>
+          </div>
+        </div>
+        <div class="info-card">
+          <h3>📍 Địa chỉ giao hàng</h3>
+          <div class="info-row">
+            <span class="info-value" style="text-align: left">
+              123 Đường Lê Lợi, P. Bến Thành<br />
+              Q.1, TP.HCM
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Ghi chú:</span>
+            <span class="info-value">Giao giờ hành chính</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order & Payment -->
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>📅 Thông tin đơn hàng</h3>
+          <div class="info-row">
+            <span class="info-label">Ngày đặt:</span>
+            <span class="info-value">18/10/2025 - 10:30</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Dự kiến giao:</span>
+            <span class="info-value">20/10/2025</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Trạng thái:</span>
+            <span class="info-value" style="color: #667eea"
+              >Đang giao hàng</span
+            >
+          </div>
+        </div>
+        <div class="info-card">
+          <h3>💳 Thanh toán</h3>
+          <div class="info-row">
+            <span class="info-label">Phương thức:</span>
+            <span class="info-value">COD (Tiền mặt)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Trạng thái:</span>
+            <span class="info-value" style="color: #f59e0b"
+              >Chưa thanh toán</span
+            >
+          </div>
+          <div class="info-row">
+            <span class="info-label">Mã giảm giá:</span>
+            <span class="info-value">GREEN10</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products -->
+      <div class="products-section">
+        <h3>🛒 Sản phẩm đã đặt</h3>
+        <div id="productList"></div>
+
+        <div class="summary" id="summary"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn btn-primary" onclick="trackOrder()">
+          🔍 Theo dõi vận chuyển
+        </button>
+        <button class="btn btn-outline" onclick="contactSupport()">
+          💬 Liên hệ hỗ trợ
+        </button>
+        <button class="btn btn-outline" onclick="downloadInvoice()">
+          📄 Tải hóa đơn
+        </button>
+        <button class="btn btn-cancel" onclick="cancelOrder()">
+          ❌ Hủy đơn hàng
+        </button>
+      </div>
+    </div>
+    <div th:replace="common/chatbox :: siteChatbox"></div>
+
+    <script>
+      const products = [
+        {
+          name: "Hoa Hồng Đỏ",
+          price: 150000,
+          qty: 2,
+          img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=200",
+        },
+        {
+          name: "Cây Sen Đá",
+          price: 85000,
+          qty: 1,
+          img: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=200",
+        },
+        {
+          name: "Lan Hồ Điệp",
+          price: 320000,
+          qty: 1,
+          img: "https://images.unsplash.com/photo-1551131618-3e7bb7b1f78f?w=200",
+        },
+      ];
+
+      const timelineSteps = [
+        { label: "Đã đặt hàng", icon: "📝", status: "completed" },
+        { label: "Đã xác nhận", icon: "✅", status: "completed" },
+        { label: "Đang giao", icon: "🚚", status: "active" },
+        { label: "Đã giao", icon: "🏠", status: "" },
+      ];
+
+      function renderTimeline() {
+        const container = document.getElementById("orderTimeline");
+        container.innerHTML = timelineSteps
+          .map(
+            (step) => `
+          <div class="timeline-step ${step.status}">
+            <div class="timeline-icon">${step.icon}</div>
+            <div class="timeline-label">${step.label}</div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function renderProducts() {
+        const container = document.getElementById("productList");
+        const summary = document.getElementById("summary");
+        let subtotal = 0;
+
+        container.innerHTML = products
+          .map((p) => {
+            const total = p.price * p.qty;
+            subtotal += total;
+            return `
+            <div class="product-item">
+              <img src="${p.img}" alt="${p.name}" />
+              <div class="product-info">
+                <h4>${p.name}</h4>
+                <div class="product-price">${p.price.toLocaleString()}đ</div>
+                <div class="product-qty">Số lượng: ${p.qty}</div>
+              </div>
+              <div class="product-total">${total.toLocaleString()}đ</div>
+            </div>
+          `;
+          })
+          .join("");
+
+        summary.innerHTML = `
+          <div class="summary-row"><span>Tạm tính:</span><span>${subtotal.toLocaleString()}đ</span></div>
+          <div class="summary-row"><span>Phí vận chuyển:</span><span>Miễn phí</span></div>
+          <div class="summary-row"><span>Giảm giá (GREEN10):</span><span style="color:#ef4444">-50,000đ</span></div>
+          <div class="summary-row total"><span>Tổng cộng:</span><span>${(
+            subtotal - 50000
+          ).toLocaleString()}đ</span></div>
+        `;
+      }
+
+      function showToast(message) {
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = 0;
+          setTimeout(() => toast.remove(), 400);
+        }, 2500);
+      }
+
+      function trackOrder() {
+        showToast("🚚 Đơn hàng đang trên đường giao! Dự kiến: 20/10/2025");
+      }
+
+      function contactSupport() {
+        showToast("💬 Hotline: 0901 234 567 | support@greenlife.vn");
+      }
+
+      function downloadInvoice() {
+        showToast("📄 Hóa đơn sẽ được gửi qua email!");
+      }
+
+      function cancelOrder() {
+        if (confirm("❌ Bạn có chắc muốn hủy đơn hàng này không?")) {
+          showToast("⚠️ Đơn hàng đang giao, không thể hủy!");
+        }
+      }
+
+      renderTimeline();
+      renderProducts();
+    </script>
+    <div th:replace="common/footer :: siteFooter"></div>
+  </body>
+</html>

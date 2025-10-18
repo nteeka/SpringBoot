@@ -34,4 +34,25 @@ public class PageController {
     public String categoryPage() {
         return "Page/Product/category";
     }
+
+    @GetMapping("/cart")
+    public String cartPage() {
+        return "Page/Product/cart";
+    }
+
+    @GetMapping("/listOrder")
+    public String listOrderPage() {
+        return "Page/Product/listOrder";
+    }
+
+    @GetMapping("/detailOrder")
+    public String detailOrderPage() {
+        return "Page/Product/detailOrder";
+    }
+
+    @GetMapping("/checkout")
+    public String checkoutPage() {
+        return "Page/Product/checkout";
+    }
+
 }

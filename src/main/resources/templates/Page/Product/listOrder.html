@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đơn Hàng Của Tôi - GreenLife</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f8f9fa;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1.5rem 1rem;
+      }
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.5rem 1rem;
+      }
+
+      /* Tabs */
+      .tabs {
+        background: white;
+        border-radius: 10px;
+        padding: 0.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        display: flex;
+        gap: 0.3rem;
+        overflow-x: auto;
+      }
+      .tab {
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: #636e72;
+        transition: all 0.2s;
+        white-space: nowrap;
+        font-size: 0.9rem;
+      }
+      .tab:hover {
+        background: #f8f9fa;
+      }
+      .tab.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+      .tab-badge {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.15rem 0.5rem;
+        border-radius: 10px;
+        margin-left: 0.4rem;
+        font-size: 0.8rem;
+      }
+
+      /* Search */
+      .search-bar {
+        background: white;
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      .search-bar input {
+        flex: 1;
+        border: none;
+        font-size: 0.95rem;
+        outline: none;
+      }
+      .search-icon {
+        color: #999;
+        font-size: 1.1rem;
+      }
+
+      /* Order Card */
+      .order-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s;
+        border-left: 4px solid transparent;
+      }
+      .order-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+      .order-card.status-pending {
+        border-left-color: #ffa502;
+      }
+      .order-card.status-confirmed {
+        border-left-color: #3742fa;
+      }
+      .order-card.status-shipping {
+        border-left-color: #a29bfe;
+      }
+      .order-card.status-delivered {
+        border-left-color: #00b894;
+      }
+      .order-card.status-cancelled {
+        border-left-color: #ff4757;
+      }
+
+      .order-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        gap: 1rem;
+      }
+      .order-id {
+        font-weight: 700;
+        color: #2d3436;
+        font-size: 1rem;
+        margin-bottom: 0.2rem;
+      }
+      .order-date {
+        color: #636e72;
+        font-size: 0.85rem;
+      }
+
+      .status-badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-block;
+      }
+      .status-pending {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .status-confirmed {
+        background: #cfe2ff;
+        color: #084298;
+      }
+      .status-shipping {
+        background: #e7e3fc;
+        color: #6c5ce7;
+      }
+      .status-delivered {
+        background: #d1f4e8;
+        color: #00b894;
+      }
+      .status-cancelled {
+        background: #fee;
+        color: #dc3545;
+      }
+
+      .order-items {
+        margin-bottom: 1rem;
+      }
+      .item-row {
+        display: flex;
+        gap: 0.8rem;
+        align-items: center;
+        padding: 0.6rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+      }
+      .item-row:last-child {
+        margin-bottom: 0;
+      }
+      .item-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+      .item-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .item-name {
+        font-weight: 600;
+        color: #2d3436;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .item-qty {
+        color: #636e72;
+        font-size: 0.8rem;
+      }
+      .item-price {
+        font-weight: 600;
+        color: #667eea;
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+
+      .order-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid #f1f3f5;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .order-total {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2d3436;
+      }
+      .order-total span {
+        color: #667eea;
+      }
+
+      .order-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #5568d3;
+        transform: translateY(-1px);
+      }
+      .btn-secondary {
+        background: #f1f3f5;
+        color: #2d3436;
+      }
+      .btn-secondary:hover {
+        background: #e9ecef;
+      }
+      .btn-danger {
+        background: #fee;
+        color: #dc3545;
+      }
+      .btn-danger:hover {
+        background: #fdd;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+      .empty-state h3 {
+        color: #2d3436;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+      .empty-state p {
+        color: #636e72;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .stat-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+      .stat-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 0.3rem;
+      }
+      .stat-label {
+        color: #636e72;
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 768px) {
+        .tabs {
+          justify-content: flex-start;
+        }
+        .order-top {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .order-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .order-actions {
+          width: 100%;
+        }
+        .btn {
+          flex: 1;
+          text-align: center;
+        }
+        .item-row {
+          padding: 0.5rem;
+        }
+        .item-img {
+          width: 45px;
+          height: 45px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div th:replace="common/header :: siteHeader"></div>
+
+    <div class="header">
+      <div class="header-content">
+        <h1>📦 Đơn Hàng Của Tôi</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number">8</div>
+          <div class="stat-label">Tổng đơn hàng</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Đang giao</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Hoàn thành</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" onclick="filterOrders('all')">
+          Tất cả <span class="tab-badge">8</span>
+        </button>
+        <button class="tab" onclick="filterOrders('pending')">
+          Chờ xác nhận <span class="tab-badge">2</span>
+        </button>
+        <button class="tab" onclick="filterOrders('shipping')">
+          Đang giao <span class="tab-badge">2</span>
+        </button>
+        <button class="tab" onclick="filterOrders('delivered')">
+          Hoàn thành <span class="tab-badge">2</span>
+        </button>
+        <button class="tab" onclick="filterOrders('cancelled')">
+          Đã hủy <span class="tab-badge">1</span>
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Tìm kiếm đơn hàng..."
+          onkeyup="searchOrders()"
+        />
+      </div>
+
+      <!-- Orders List -->
+      <div id="ordersList"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none">
+        <div class="empty-icon">📭</div>
+        <h3>Không tìm thấy đơn hàng</h3>
+        <p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+        <button class="btn btn-primary" onclick="resetFilters()">
+          Xem tất cả
+        </button>
+      </div>
+    </div>
+    <div th:replace="common/chatbox :: siteChatbox"></div>
+    <div th:replace="common/footer :: siteFooter"></div>
+
+    <script>
+      const orders = [
+        {
+          id: "#GH001",
+          date: "18/10/2025",
+          status: "shipping",
+          statusText: "Đang giao",
+          products: [
+            {
+              name: "Hoa Hồng Đỏ",
+              qty: 2,
+              price: 150000,
+              img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=200",
+            },
+            {
+              name: "Cây Sen Đá",
+              qty: 1,
+              price: 85000,
+              img: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=200",
+            },
+          ],
+          total: 385000,
+        },
+        {
+          id: "#GH002",
+          date: "17/10/2025",
+          status: "delivered",
+          statusText: "Đã giao",
+          products: [
+            {
+              name: "Lan Hồ Điệp",
+              qty: 1,
+              price: 320000,
+              img: "https://images.unsplash.com/photo-1551131618-3e7bb7b1f78f?w=200",
+            },
+          ],
+          total: 320000,
+        },
+        {
+          id: "#GH003",
+          date: "16/10/2025",
+          status: "pending",
+          statusText: "Chờ xác nhận",
+          products: [
+            {
+              name: "Hoa Tulip",
+              qty: 3,
+              price: 120000,
+              img: "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=200",
+            },
+          ],
+          total: 360000,
+        },
+        {
+          id: "#GH004",
+          date: "15/10/2025",
+          status: "confirmed",
+          statusText: "Đã xác nhận",
+          products: [
+            {
+              name: "Hoa Hướng Dương",
+              qty: 1,
+              price: 180000,
+              img: "https://images.unsplash.com/photo-1597848212624-e530cb6aff0b?w=200",
+            },
+          ],
+          total: 180000,
+        },
+        {
+          id: "#GH005",
+          date: "14/10/2025",
+          status: "shipping",
+          statusText: "Đang giao",
+          products: [
+            {
+              name: "Cây Lưỡi Hổ",
+              qty: 2,
+              price: 75000,
+              img: "https://images.unsplash.com/photo-1593691509543-c55fb32d8de5?w=200",
+            },
+          ],
+          total: 150000,
+        },
+        {
+          id: "#GH006",
+          date: "13/10/2025",
+          status: "delivered",
+          statusText: "Đã giao",
+          products: [
+            {
+              name: "Hoa Ly",
+              qty: 1,
+              price: 250000,
+              img: "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=200",
+            },
+          ],
+          total: 250000,
+        },
+        {
+          id: "#GH007",
+          date: "12/10/2025",
+          status: "cancelled",
+          statusText: "Đã hủy",
+          products: [
+            {
+              name: "Cây Kim Tiền",
+              qty: 1,
+              price: 450000,
+              img: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=200",
+            },
+          ],
+          total: 450000,
+        },
+        {
+          id: "#GH008",
+          date: "11/10/2025",
+          status: "pending",
+          statusText: "Chờ xác nhận",
+          products: [
+            {
+              name: "Hoa Baby",
+              qty: 5,
+              price: 60000,
+              img: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=200",
+            },
+          ],
+          total: 300000,
+        },
+      ];
+
+      let filteredOrders = [...orders];
+
+      function renderOrders(ordersToRender) {
+        const container = document.getElementById("ordersList");
+        const emptyState = document.getElementById("emptyState");
+
+        if (ordersToRender.length === 0) {
+          container.style.display = "none";
+          emptyState.style.display = "block";
+          return;
+        }
+
+        container.style.display = "block";
+        emptyState.style.display = "none";
+
+        container.innerHTML = ordersToRender
+          .map(
+            (order) => `
+        <div class="order-card status-${order.status}">
+          <div class="order-top">
+            <div>
+              <div class="order-id">${order.id}</div>
+              <div class="order-date">📅 ${order.date}</div>
+            </div>
+            <span class="status-badge status-${order.status}">${
+              order.statusText
+            }</span>
+          </div>
+
+          <div class="order-items">
+            ${order.products
+              .map(
+                (p) => `
+              <div class="item-row">
+                <img src="${p.img}" alt="${p.name}" class="item-img">
+                <div class="item-info">
+                  <div class="item-name">${p.name}</div>
+                  <div class="item-qty">x${p.qty}</div>
+                </div>
+                <div class="item-price">${(
+                  p.price * p.qty
+                ).toLocaleString()}đ</div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+
+          <div class="order-bottom">
+            <div class="order-total">Tổng: <span>${order.total.toLocaleString()}đ</span></div>
+            <div class="order-actions">
+              <button class="btn btn-primary" onclick="viewDetail('${
+                order.id
+              }')">Chi tiết</button>
+              ${
+                order.status === "delivered"
+                  ? `<button class="btn btn-secondary" onclick="reorder('${order.id}')">Mua lại</button>`
+                  : ""
+              }
+              ${
+                order.status === "shipping"
+                  ? `<button class="btn btn-secondary" onclick="track('${order.id}')">Theo dõi</button>`
+                  : ""
+              }
+              ${
+                order.status === "pending"
+                  ? `<button class="btn btn-danger" onclick="cancel('${order.id}')">Hủy</button>`
+                  : ""
+              }
+            </div>
+          </div>
+        </div>
+      `
+          )
+          .join("");
+      }
+
+      function filterOrders(status) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((tab) => tab.classList.remove("active"));
+        event.target.classList.add("active");
+
+        filteredOrders =
+          status === "all"
+            ? [...orders]
+            : orders.filter((o) => o.status === status);
+        renderOrders(filteredOrders);
+      }
+
+      function searchOrders() {
+        const query = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const results = orders.filter(
+          (o) =>
+            o.id.toLowerCase().includes(query) ||
+            o.products.some((p) => p.name.toLowerCase().includes(query))
+        );
+        renderOrders(results);
+      }
+
+      function resetFilters() {
+        document.getElementById("searchInput").value = "";
+        document.querySelector(".tab").click();
+      }
+
+      function viewDetail(id) {
+        alert(`📋 Xem chi tiết đơn ${id}`);
+      }
+
+      function track(id) {
+        alert(`🚚 Đơn ${id} đang trên đường giao đến bạn!`);
+      }
+
+      function cancel(id) {
+        if (confirm(`Bạn muốn hủy đơn ${id}?`)) {
+          alert("Đã hủy đơn hàng!");
+        }
+      }
+
+      function reorder(id) {
+        alert(`✅ Đã thêm sản phẩm từ đơn ${id} vào giỏ hàng!`);
+      }
+
+      renderOrders(orders);
+    </script>
+  </body>
+</html>

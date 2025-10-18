@@ -1212,3 +1212,23 @@ aside.show {
     margin: 0 auto;
   }
 }
+
+/* Thêm vào đầu file list.css */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: auto !important;
+  overflow-y: scroll; /* Force scrollbar */
+}
+
+body {
+  overscroll-behavior: none; /* Disable bounce scroll */
+}
+
+.card {
+  contain: layout style paint;
+  content-visibility: auto;
+}

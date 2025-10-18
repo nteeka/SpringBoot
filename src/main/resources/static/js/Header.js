@@ -187,3 +187,7 @@ function playSound(type) {
     console.warn("Không thể phát âm thanh:", e);
   }
 }
+
+document.getElementById("view-cart-btn").addEventListener("click", function () {
+  window.location.href = "cart";
+});
