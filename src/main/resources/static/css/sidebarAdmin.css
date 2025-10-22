@@ -1,0 +1,37 @@
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+  color: white;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.logo {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.nav-item {
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  border-left: 4px solid transparent;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  border-left-color: white;
+}

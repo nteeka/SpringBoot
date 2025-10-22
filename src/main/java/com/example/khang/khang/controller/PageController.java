@@ -55,4 +55,9 @@ public class PageController {
         return "Page/Product/checkout";
     }
 
+    @GetMapping("/dashboard")
+    public String adminDashboard() {
+        return "Page/Admin/dashboard";
+    }
+
 }

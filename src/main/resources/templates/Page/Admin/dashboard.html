@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Pro - Quản lý sản phẩm | GreenLife</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div th:replace="Page/Admin/sidebarAdmin :: sidebarAdmin"></div>
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1>📦 Quản lý sản phẩm Pro</h1>
+        <div class="user-info">
+          <div>
+            <div style="font-weight: 600">Admin User</div>
+            <div style="font-size: 0.85rem; color: #636e72">
+              admin@greenlife.vn
+            </div>
+          </div>
+          <div class="user-avatar">A</div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card" onclick="filterByStatus('all')">
+          <div class="stat-icon blue">🌼</div>
+          <div class="stat-info">
+            <h3 id="totalProducts">12</h3>
+            <p>Tổng sản phẩm</p>
+          </div>
+        </div>
+        <div class="stat-card" onclick="filterByStatus('active')">
+          <div class="stat-icon green">✅</div>
+          <div class="stat-info">
+            <h3 id="activeProducts">10</h3>
+            <p>Đang bán</p>
+          </div>
+        </div>
+        <div class="stat-card" onclick="filterByStock('low')">
+          <div class="stat-icon orange">📈</div>
+          <div class="stat-info">
+            <h3 id="lowStockProducts">3</h3>
+            <p>Sắp hết hàng</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">💰</div>
+          <div class="stat-info">
+            <h3 id="totalValue">24.5M</h3>
+            <p>Tổng giá trị</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions Bar -->
+      <div class="actions-bar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Tìm theo tên, SKU, danh mục..."
+          />
+        </div>
+        <button class="btn btn-secondary" onclick="toggleAdvancedFilters()">
+          🔧 Lọc nâng cao
+        </button>
+        <button class="btn btn-primary" onclick="openModal('add')">
+          ➕ Thêm sản phẩm
+        </button>
+        <button class="btn btn-secondary" onclick="exportToExcel()">
+          📤 Xuất Excel
+        </button>
+        <button class="btn btn-secondary" onclick="importFromExcel()">
+          📥 Nhập Excel
+        </button>
+      </div>
+
+      <!-- Advanced Filters -->
+      <!-- Advanced Filters Panel -->
+<div class="advanced-filters" id="advancedFilters">
+  <div class="filters-header">
+    <h3>🔍 Bộ lọc nâng cao</h3>
+    <button class="btn-collapse" onclick="toggleAdvancedFilters()">
+      <span id="collapseIcon">▼</span>
+    </button>
+  </div>
+
+  <div class="filters-body">
+    <!-- Row 1: Price & Stock -->
+    <div class="filter-section">
+      <div class="section-title">💰 Giá & Tồn kho</div>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>Giá từ (VNĐ)</label>
+          <input 
+            type="number" 
+            id="priceMin" 
+            placeholder="0" 
+            min="0"
+            step="10000"
+          />
+        </div>
+        <div class="filter-group">
+          <label>Giá đến (VNĐ)</label>
+          <input 
+            type="number" 
+            id="priceMax" 
+            placeholder="10,000,000" 
+            min="0"
+            step="10000"
+          />
+        </div>
+        <div class="filter-group">
+          <label>Mức tồn kho</label>
+          <select id="stockFilter" onchange="filterByStock(this.value)">
+            <option value="">Tất cả</option>
+            <option value="high">🟢 Còn nhiều (>50)</option>
+            <option value="medium">🟡 Còn ít (10-50)</option>
+            <option value="low">🔴 Sắp hết (<10)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Categories & Style -->
+    <div class="filter-section">
+      <div class="section-title">📂 Danh mục & Phong cách</div>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>Danh mục</label>
+          <select id="categoryFilter">
+            <option value="">Tất cả</option>
+            <option value="valentine">💕 Valentine</option>
+            <option value="sinh-nhat">🎂 Sinh nhật</option>
+            <option value="cuoi">💑 Cưới hỏi</option>
+            <option value="tet">🧧 Tết</option>
+            <option value="khai-truong">🎊 Khai trương</option>
+            <option value="phong-thuy">☘️ Phong thủy</option>
+            <option value="ky-niem">💝 Kỷ niệm</option>
+            <option value="tham-benh">🏥 Thăm bệnh</option>
+            <option value="ngay-me">🌸 Ngày của mẹ</option>
+            <option value="tot-nghiep">🎓 Tốt nghiệp</option>
+            <option value="de-ban">🪴 Để bàn</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Phong cách</label>
+          <select id="styleFilter">
+            <option value="">Tất cả</option>
+            <option value="sang-trong">👑 Sang trọng</option>
+            <option value="vintage">🕰️ Vintage</option>
+            <option value="hien-dai">✨ Hiện đại</option>
+            <option value="rustic">🌿 Rustic</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Trạng thái</label>
+          <select id="statusFilterSelect" onchange="filterByStatus(this.value)">
+            <option value="all">Tất cả</option>
+            <option value="active">✅ Đang bán</option>
+            <option value="inactive">⏸️ Tạm ngưng</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Sort Options -->
+    <div class="filter-section">
+      <div class="section-title">⬆️ Sắp xếp</div>
+      <div class="filter-row">
+        <div class="filter-group full-width">
+          <label>Sắp xếp theo</label>
+          <div class="sort-options">
+            <button class="sort-btn" onclick="applySortFilter('name-asc')">
+              📝 Tên A→Z
+            </button>
+            <button class="sort-btn" onclick="applySortFilter('name-desc')">
+              📝 Tên Z→A
+            </button>
+            <button class="sort-btn" onclick="applySortFilter('price-asc')">
+              💵 Giá thấp→cao
+            </button>
+            <button class="sort-btn" onclick="applySortFilter('price-desc')">
+              💵 Giá cao→thấp
+            </button>
+            <button class="sort-btn" onclick="applySortFilter('stock-asc')">
+              📦 Tồn kho tăng
+            </button>
+            <button class="sort-btn" onclick="applySortFilter('stock-desc')">
+              📦 Tồn kho giảm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="filters-actions">
+      <button class="btn btn-secondary" onclick="clearFilters()">
+        🗑️ Xóa bộ lọc
+      </button>
+      <button class="btn btn-primary" onclick="applyFilters()">
+        ✅ Áp dụng bộ lọc
+      </button>
+    </div>
+  </div>
+</div>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <div
+          class="filter-tab active"
+          data-filter="all"
+          onclick="setTypeFilter('all')"
+        >
+          Tất cả
+        </div>
+        <div
+          class="filter-tab"
+          data-filter="hoa"
+          onclick="setTypeFilter('hoa')"
+        >
+          🌼 Hoa
+        </div>
+        <div
+          class="filter-tab"
+          data-filter="cay"
+          onclick="setTypeFilter('cay')"
+        >
+          🌿 Cây cảnh
+        </div>
+        <div
+          class="filter-tab"
+          data-filter="phukien"
+          onclick="setTypeFilter('phukien')"
+        >
+          💐 Phụ kiện
+        </div>
+      </div>
+
+      <!-- Table Header with Bulk Actions -->
+      <div class="table-header">
+        <div class="bulk-actions">
+          <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" />
+          <span id="selectedCount">0 đã chọn</span>
+          <button
+            class="btn btn-danger"
+            id="bulkDeleteBtn"
+            onclick="bulkDelete()"
+            style="display: none"
+          >
+            🗑️ Xóa đã chọn
+          </button>
+          <button
+            class="btn btn-secondary"
+            id="bulkStatusBtn"
+            onclick="bulkUpdateStatus()"
+            style="display: none"
+          >
+            ⚡ Cập nhật trạng thái
+          </button>
+        </div>
+        <div style="font-weight: 600; color: #636e72">
+          Hiển thị <span id="displayCount">12</span> sản phẩm
+        </div>
+      </div>
+
+      <!-- Products Table -->
+      <div class="products-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="checkbox-cell"></th>
+              <th>Hình ảnh</th>
+              <th class="sortable" onclick="sortTable('name')">Tên sản phẩm</th>
+              <th class="sortable" onclick="sortTable('type')">Loại</th>
+              <th class="sortable" onclick="sortTable('price')">Giá</th>
+              <th class="sortable" onclick="sortTable('stock')">Tồn kho</th>
+              <th>Danh mục</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <!-- Render by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <div class="pagination-info">
+          Hiển thị <span id="pageInfo">1-10 của 12</span> sản phẩm
+        </div>
+        <div class="pagination-btns">
+          <button
+            class="page-btn"
+            id="prevBtn"
+            onclick="changePage(-1)"
+            disabled
+          >
+            ← Trước
+          </button>
+          <div id="pageNumbers"></div>
+          <button class="page-btn" id="nextBtn" onclick="changePage(1)">
+            Sau →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Add/Edit Product -->
+    <div class="modal" id="productModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">Thêm sản phẩm mới</h2>
+          <button class="close-btn" onclick="closeModal()">✕</button>
+        </div>
+        <form id="productForm">
+          <input type="hidden" id="productId" />
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tên sản phẩm *</label>
+              <input
+                type="text"
+                id="productName"
+                required
+                placeholder="VD: Hoa Hồng Đỏ"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Mã SKU *</label>
+              <input
+                type="text"
+                id="productSku"
+                required
+                placeholder="VD: HOA-001"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Giá (VNĐ) *</label>
+              <input
+                type="number"
+                id="productPrice"
+                required
+                placeholder="450000"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Tồn kho *</label>
+              <input
+                type="number"
+                id="productStock"
+                required
+                placeholder="50"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Loại sản phẩm *</label>
+              <select id="productType" required>
+                <option value="">-- Chọn loại --</option>
+                <option value="hoa">🌼 Hoa</option>
+                <option value="cay">🌿 Cây cảnh</option>
+                <option value="phukien">💐 Phụ kiện</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Danh mục *</label>
+              <select id="productCategory" required>
+                <option value="">-- Chọn danh mục --</option>
+                <option value="valentine">💕 Valentine</option>
+                <option value="sinh-nhat">🎂 Sinh nhật</option>
+                <option value="cuoi">💒 Cưới hỏi</option>
+                <option value="tet">🧧 Tết</option>
+                <option value="khai-truong">🎊 Khai trương</option>
+                <option value="phong-thuy">☘️ Phong thủy</option>
+                <option value="ky-niem">💝 Kỷ niệm</option>
+                <option value="tham-benh">🏥 Thăm bệnh</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Phong cách *</label>
+              <select id="productStyle" required>
+                <option value="">-- Chọn phong cách --</option>
+                <option value="sang-trong">👑 Sang trọng</option>
+                <option value="vintage">🕰️ Vintage</option>
+                <option value="hien-dai">✨ Hiện đại</option>
+                <option value="rustic">🌿 Rustic</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Trạng thái</label>
+              <select id="productStatus">
+                <option value="active">✅ Đang bán</option>
+                <option value="inactive">❌ Tạm ngưng</option>
+              </select>
+            </div>
+
+            <!-- <div class="form-group full-width">
+              <label>URL Hình ảnh *</label>
+              <input
+                type="url"
+                id="productImg"
+                required
+                placeholder="https://images.unsplash.com/..."
+                onchange="previewImage()"
+              />
+              <img id="imagePreview" class="image-preview" alt="Preview" />
+            </div> -->
+            <div class="form-group full-width">
+              <label>Hình ảnh sản phẩm *</label>
+
+              <!-- Lựa chọn phương thức tải ảnh -->
+              <div class="image-option">
+                <div
+                  class="image-option-btn active"
+                  id="optionUpload"
+                  onclick="selectImageOption('upload')"
+                >
+                  📤 Upload ảnh
+                </div>
+                <div
+                  class="image-option-btn"
+                  id="optionUrl"
+                  onclick="selectImageOption('url')"
+                >
+                  🌐 Dán URL ảnh
+                </div>
+              </div>
+
+              <!-- Upload file -->
+              <div id="uploadContainer">
+                <input
+                  type="file"
+                  id="productImgUpload"
+                  accept="image/*"
+                  onchange="handleImageUpload(event)"
+                />
+              </div>
+
+              <!-- Nhập URL -->
+              <div id="urlContainer" style="display: none">
+                <input
+                  type="url"
+                  id="productImg"
+                  placeholder="https://images.unsplash.com/..."
+                  onchange="previewImage()"
+                />
+              </div>
+
+              <!-- Preview + nút xóa -->
+              <div
+                id="previewContainer"
+                style="margin-top: 0.8rem; text-align: center"
+              >
+                <img id="imagePreview" class="image-preview" alt="Preview" />
+                <button
+                  type="button"
+                  id="removeImageBtn"
+                  class="btn-remove-image"
+                  style="display: none"
+                  onclick="removeImage()"
+                >
+                  🗑️ Xóa ảnh
+                </button>
+              </div>
+            </div>
+            <div class="form-group full-width">
+              <label>Mô tả sản phẩm</label>
+              <textarea
+                id="productDescription"
+                placeholder="Nhập mô tả chi tiết về sản phẩm..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal()"
+            >
+              Hủy
+            </button>
+            <button type="submit" class="btn btn-primary">
+              💾 Lưu sản phẩm
+            </button>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+      <span id="toastIcon">✅</span>
+      <span id="toastMessage">Thao tác thành công!</span>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}" defer></script>
+
+  </body>
+</html>

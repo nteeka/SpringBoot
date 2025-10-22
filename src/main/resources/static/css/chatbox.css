@@ -1,10 +1,35 @@
-/* --- Hỏi đáp nổi góc phải --- */
+/* --- Nút Cuộn Lên Trên --- */
+#scrollTopBtn {
+  position: fixed;
+  bottom: 20px; /* ✅ nằm thấp nhất */
+  right: 20px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s;
+  z-index: 9998; /* dưới qa-widget 1 cấp */
+}
+#scrollTopBtn:hover {
+  background: #555;
+  transform: translateY(-4px);
+}
+
+/* --- Nút Hỏi Đáp (nằm trên scrollTop) --- */
 #qa-widget {
   position: fixed;
-  bottom: 20px;
+  bottom: 90px; /* ✅ cao hơn scrollTopBtn */
   right: 20px;
   font-family: "Poppins", sans-serif;
-  z-index: 9999;
+  z-index: 9999; /* cao hơn scrollTopBtn */
 }
 
 #qa-toggle {
@@ -23,6 +48,7 @@
   transform: scale(1.05);
 }
 
+/* --- Hộp chat QA --- */
 #qa-box {
   display: none;
   flex-direction: column;
@@ -77,6 +103,7 @@
   background: #43a047;
 }
 
+/* --- Tin nhắn --- */
 .msg-user,
 .msg-bot {
   margin-bottom: 10px;
@@ -106,12 +133,36 @@
   }
 }
 
-/* social */
+/* --- Nút Scroll To Top --- */
+#scrollTopBtn {
+  position: fixed;
+  bottom: 20px; /* ✅ nằm thấp nhất */
+  right: 20px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s;
+  z-index: 9998; /* dưới qa-widget 1 cấp */
+}
+#scrollTopBtn:hover {
+  background: #555;
+  transform: translateY(-4px);
+}
 
+/* --- Icon mạng xã hội --- */
 #social-icons {
   position: fixed;
-  bottom: 100px;
-  left: 20px; /* đổi thành right:20px nếu muốn nằm bên phải */
+  bottom: 20px;
+  left: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;

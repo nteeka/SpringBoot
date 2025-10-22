@@ -1,4 +1,6 @@
 <div th:fragment="siteChatbox">
+  <button id="scrollTopBtn">⬆️</button>
+
   <!-- 🌿 Chat Hỏi Đáp -->
   <link rel="stylesheet" th:href="@{/css/chatbox.css}" />
   <div id="qa-widget">
@@ -19,6 +21,26 @@
       </form>
     </div>
   </div>
+
+  <script>
+    const scrollBtn = document.getElementById("scrollTopBtn");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 400) {
+        scrollBtn.style.display = "flex";
+      } else {
+        scrollBtn.style.display = "none";
+      }
+      document.querySelectorAll(".section").forEach((sec) => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+          sec.classList.add("show");
+        }
+      });
+    });
+    scrollBtn.addEventListener("click", () =>
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    );
+  </script>
 
   <!-- 🌿 Liên hệ mạng xã hội -->
   <div id="social-icons">

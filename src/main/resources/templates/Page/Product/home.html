@@ -272,28 +272,8 @@
       </div>
     </section>
 
-    <button id="scrollTopBtn">⬆️</button>
     <div th:replace="common/chatbox :: siteChatbox"></div>
 
     <div th:replace="common/footer :: siteFooter"></div>
-    <script>
-      const scrollBtn = document.getElementById("scrollTopBtn");
-      window.addEventListener("scroll", () => {
-        if (window.scrollY > 400) {
-          scrollBtn.style.display = "flex";
-        } else {
-          scrollBtn.style.display = "none";
-        }
-        document.querySelectorAll(".section").forEach((sec) => {
-          const rect = sec.getBoundingClientRect();
-          if (rect.top < window.innerHeight - 100) {
-            sec.classList.add("show");
-          }
-        });
-      });
-      scrollBtn.addEventListener("click", () =>
-        window.scrollTo({ top: 0, behavior: "smooth" })
-      );
-    </script>
   </body>
 </html>
