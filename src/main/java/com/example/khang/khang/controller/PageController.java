@@ -60,4 +60,14 @@ public class PageController {
         return "Page/Admin/dashboard";
     }
 
+    @GetMapping("/orderAdmin")
+    public String orderManager() {
+        return "Page/Admin/orders";
+    }
+
+    @GetMapping("/storageManager")
+    public String storageManager() {
+        return "Page/Admin/storageManager";
+    }
+
 }

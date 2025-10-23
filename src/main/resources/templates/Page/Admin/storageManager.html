@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý Kho & Nhập Hàng | GreenLife Admin</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fa;
+        margin-left: 250px;
+      }
+
+      .main-content {
+        padding: 2rem;
+        min-height: 100vh;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+        color: #2c3e50;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-success {
+        background: #27ae60;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #229954;
+      }
+
+      .btn-warning {
+        background: #f39c12;
+        color: white;
+      }
+
+      .btn-warning:hover {
+        background: #e67e22;
+      }
+
+      .btn-secondary {
+        background: #ecf0f1;
+        color: #2c3e50;
+      }
+
+      .btn-secondary:hover {
+        background: #dfe6e9;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      }
+
+      .stat-card.warning {
+        border-left: 4px solid #f39c12;
+      }
+
+      .stat-card.danger {
+        border-left: 4px solid #e74c3c;
+      }
+
+      .stat-card.success {
+        border-left: 4px solid #27ae60;
+      }
+
+      .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.8rem;
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+      }
+
+      .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+
+      .card-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #ecf0f1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-header h2 {
+        color: #2c3e50;
+        font-size: 1.3rem;
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th {
+        background: #f8f9fa;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid #ecf0f1;
+        color: #2c3e50;
+      }
+
+      tr:hover {
+        background: #f8f9fa;
+      }
+
+      .product-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .product-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+
+      .product-name {
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .product-sku {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+      }
+
+      .stock-badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+      }
+
+      .stock-low {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .stock-out {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .stock-good {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .btn-icon {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s;
+      }
+
+      .btn-edit {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .btn-edit:hover {
+        background: #1976d2;
+        color: white;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #dfe6e9;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: inherit;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .activity-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .activity-item {
+        padding: 1rem;
+        border-bottom: 1px solid #ecf0f1;
+        display: flex;
+        gap: 1rem;
+      }
+
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+
+      .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .activity-icon.in {
+        background: #d4edda;
+      }
+
+      .activity-icon.out {
+        background: #f8d7da;
+      }
+
+      .activity-icon.adjust {
+        background: #fff3cd;
+      }
+
+      .activity-content {
+        flex: 1;
+      }
+
+      .activity-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.3rem;
+      }
+
+      .activity-detail {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+      }
+
+      .activity-time {
+        font-size: 0.8rem;
+        color: #95a5a6;
+        margin-top: 0.3rem;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #ecf0f1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h3 {
+        color: #2c3e50;
+        font-size: 1.5rem;
+      }
+
+      .close-modal {
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #7f8c8d;
+        background: none;
+        border: none;
+        padding: 0.5rem;
+      }
+
+      .close-modal:hover {
+        color: #2c3e50;
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+      }
+
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 3000;
+        display: none;
+        align-items: center;
+        gap: 0.8rem;
+        animation: slideIn 0.3s ease-out;
+      }
+
+      .notification.active {
+        display: flex;
+      }
+
+      .notification.success {
+        border-left: 4px solid #27ae60;
+      }
+
+      .notification.error {
+        border-left: 4px solid #e74c3c;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .alert-warning {
+        background: #fff3cd;
+        border-left: 4px solid #f39c12;
+        color: #856404;
+      }
+
+      .alert-info {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        color: #0c5460;
+      }
+
+      .supplier-card {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .supplier-name {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+      }
+
+      .supplier-info {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 1rem;
+        }
+
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div th:replace="Page/Admin/sidebarAdmin :: sidebarAdmin"></div>
+    <!-- Notification -->
+    <div class="notification" id="notification">
+      <span id="notificationIcon"></span>
+      <span id="notificationMessage"></span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1>📦 Quản lý Kho & Nhập Hàng</h1>
+        <div class="header-actions">
+          <button class="btn btn-success" onclick="openImportModal()">
+            ➕ Nhập hàng mới
+          </button>
+          <button class="btn btn-warning" onclick="openStockCheckModal()">
+            📋 Kiểm kê kho
+          </button>
+          <button class="btn btn-primary" onclick="exportInventoryReport()">
+            📊 Xuất báo cáo
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card success">
+          <div class="stat-header">
+            <span class="stat-icon">📦</span>
+          </div>
+          <div class="stat-value" id="totalProducts">156</div>
+          <div class="stat-label">Tổng số sản phẩm</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-header">
+            <span class="stat-icon">⚠️</span>
+          </div>
+          <div class="stat-value" id="lowStockProducts">12</div>
+          <div class="stat-label">Sắp hết hàng</div>
+        </div>
+        <div class="stat-card danger">
+          <div class="stat-header">
+            <span class="stat-icon">❌</span>
+          </div>
+          <div class="stat-value" id="outOfStockProducts">5</div>
+          <div class="stat-label">Hết hàng</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-icon">💰</span>
+          </div>
+          <div class="stat-value" id="inventoryValue">2.5B</div>
+          <div class="stat-label">Giá trị kho hàng</div>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alert alert-warning" id="lowStockAlert">
+        ⚠️ <strong>Cảnh báo:</strong> Có 12 sản phẩm sắp hết hàng. Vui lòng nhập
+        thêm hàng!
+      </div>
+
+      <!-- Content Grid -->
+      <div class="content-grid">
+        <!-- Inventory Table -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Tồn kho hiện tại</h2>
+            <div style="display: flex; gap: 0.5rem">
+              <select
+                id="stockFilter"
+                onchange="filterInventory()"
+                style="
+                  padding: 0.5rem;
+                  border-radius: 6px;
+                  border: 1px solid #dfe6e9;
+                "
+              >
+                <option value="all">Tất cả</option>
+                <option value="low">Sắp hết hàng</option>
+                <option value="out">Hết hàng</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sản phẩm</th>
+                    <th>SKU</th>
+                    <th>Tồn kho</th>
+                    <th>Trạng thái</th>
+                    <th>Giá nhập</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTableBody">
+                  <!-- Will be populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Hoạt động gần đây</h2>
+          </div>
+          <div class="card-body" style="padding: 0">
+            <div class="activity-list" id="activityList">
+              <!-- Will be populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suppliers Section -->
+      <div class="card">
+        <div class="card-header">
+          <h2>🏪 Nhà cung cấp</h2>
+          <button class="btn btn-primary" onclick="openSupplierModal()">
+            ➕ Thêm nhà cung cấp
+          </button>
+        </div>
+        <div class="card-body">
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+              gap: 1rem;
+            "
+            id="suppliersList"
+          >
+            <!-- Will be populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Import Stock Modal -->
+    <div class="modal" id="importModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>➕ Nhập hàng mới</h3>
+          <button class="close-modal" onclick="closeImportModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="importForm">
+            <div class="form-group">
+              <label>Chọn sản phẩm *</label>
+              <select id="importProduct" required>
+                <option value="">-- Chọn sản phẩm --</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Số lượng nhập *</label>
+                <input
+                  type="number"
+                  id="importQuantity"
+                  min="1"
+                  required
+                  placeholder="Nhập số lượng"
+                />
+              </div>
+              <div class="form-group">
+                <label>Giá nhập (VNĐ) *</label>
+                <input
+                  type="number"
+                  id="importPrice"
+                  min="0"
+                  required
+                  placeholder="Nhập giá"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Nhà cung cấp *</label>
+              <select id="importSupplier" required>
+                <option value="">-- Chọn nhà cung cấp --</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Ngày nhập *</label>
+                <input type="date" id="importDate" required />
+              </div>
+              <div class="form-group">
+                <label>Mã phiếu nhập</label>
+                <input type="text" id="importCode" placeholder="Tự động tạo" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Ghi chú</label>
+              <textarea
+                id="importNote"
+                rows="3"
+                placeholder="Nhập ghi chú nếu có..."
+              ></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem">
+              <button type="submit" class="btn btn-success" style="flex: 1">
+                ✓ Xác nhận nhập hàng
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeImportModal()"
+                style="flex: 1"
+              >
+                ✕ Hủy
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock Adjustment Modal -->
+    <div class="modal" id="adjustModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>📝 Điều chỉnh tồn kho</h3>
+          <button class="close-modal" onclick="closeAdjustModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="adjustForm">
+            <div class="alert alert-info">
+              Sản phẩm: <strong id="adjustProductName"></strong><br />
+              Tồn kho hiện tại: <strong id="adjustCurrentStock"></strong>
+            </div>
+
+            <div class="form-group">
+              <label>Loại điều chỉnh *</label>
+              <select id="adjustType" required onchange="updateAdjustLabel()">
+                <option value="add">➕ Thêm vào kho</option>
+                <option value="subtract">➖ Trừ khỏi kho</option>
+                <option value="set">📌 Đặt số lượng cố định</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label id="adjustQuantityLabel">Số lượng thêm *</label>
+              <input
+                type="number"
+                id="adjustQuantity"
+                min="0"
+                required
+                placeholder="Nhập số lượng"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Lý do điều chỉnh *</label>
+              <select id="adjustReason" required>
+                <option value="">-- Chọn lý do --</option>
+                <option value="damaged">Hàng hỏng</option>
+                <option value="lost">Thất thoát</option>
+                <option value="return">Trả hàng</option>
+                <option value="inventory">Kiểm kê phát hiện sai lệch</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Ghi chú chi tiết</label>
+              <textarea
+                id="adjustNote"
+                rows="3"
+                placeholder="Mô tả chi tiết lý do điều chỉnh..."
+              ></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem">
+              <button type="submit" class="btn btn-warning" style="flex: 1">
+                ✓ Xác nhận điều chỉnh
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeAdjustModal()"
+                style="flex: 1"
+              >
+                ✕ Hủy
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Supplier Modal -->
+    <div class="modal" id="supplierModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🏪 Thêm nhà cung cấp</h3>
+          <button class="close-modal" onclick="closeSupplierModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="supplierForm">
+            <div class="form-group">
+              <label>Tên nhà cung cấp *</label>
+              <input
+                type="text"
+                id="supplierName"
+                required
+                placeholder="Nhập tên nhà cung cấp"
+              />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Người liên hệ *</label>
+                <input
+                  type="text"
+                  id="supplierContact"
+                  required
+                  placeholder="Tên người liên hệ"
+                />
+              </div>
+              <div class="form-group">
+                <label>Số điện thoại *</label>
+                <input
+                  type="tel"
+                  id="supplierPhone"
+                  required
+                  placeholder="Số điện thoại"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                id="supplierEmail"
+                placeholder="Email liên hệ"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Địa chỉ</label>
+              <textarea
+                id="supplierAddress"
+                rows="2"
+                placeholder="Địa chỉ nhà cung cấp"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Ghi chú</label>
+              <textarea
+                id="supplierNote"
+                rows="2"
+                placeholder="Ghi chú về nhà cung cấp..."
+              ></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem">
+              <button type="submit" class="btn btn-success" style="flex: 1">
+                ✓ Thêm nhà cung cấp
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeSupplierModal()"
+                style="flex: 1"
+              >
+                ✕ Hủy
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Sample Data
+      const inventoryData = [
+        {
+          id: 1,
+          name: "Cây Kim Tiền",
+          sku: "CKT001",
+          stock: 45,
+          minStock: 10,
+          importPrice: 180000,
+          image:
+            "https://images.unsplash.com/photo-1509937528035-ad76254b0356?w=100",
+        },
+        {
+          id: 2,
+          name: "Cây Trầu Bà",
+          sku: "CTB001",
+          stock: 8,
+          minStock: 10,
+          importPrice: 120000,
+          image:
+            "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=100",
+        },
+        {
+          id: 3,
+          name: "Hoa Hồng Ecuador",
+          sku: "HHE001",
+          stock: 0,
+          minStock: 20,
+          importPrice: 280000,
+          image:
+            "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=100",
+        },
+        {
+          id: 4,
+          name: "Cây Phát Tài",
+          sku: "CPT001",
+          stock: 32,
+          minStock: 15,
+          importPrice: 350000,
+          image:
+            "https://images.unsplash.com/photo-1463154545680-d59320fd685d?w=100",
+        },
+        {
+          id: 5,
+          name: "Cây Lưỡi Hổ",
+          sku: "CLH001",
+          stock: 6,
+          minStock: 10,
+          importPrice: 90000,
+          image:
+            "https://images.unsplash.com/photo-1591958911259-bee2173bdccc?w=100",
+        },
+      ];
+
+      const activities = [
+        {
+          type: "in",
+          title: "Nhập hàng",
+          detail: "Nhập 50 Cây Kim Tiền từ NCC Đà Lạt Farm",
+          time: "2 giờ trước",
+          icon: "📥",
+        },
+        {
+          type: "out",
+          title: "Xuất hàng",
+          detail: "Xuất 15 Hoa Hồng cho đơn DH001",
+          time: "3 giờ trước",
+          icon: "📤",
+        },
+        {
+          type: "adjust",
+          title: "Điều chỉnh tồn kho",
+          detail: "Trừ 5 Cây Trầu Bà - Lý do: Hàng hỏng",
+          time: "5 giờ trước",
+          icon: "⚙️",
+        },
+        {
+          type: "in",
+          title: "Nhập hàng",
+          detail: "Nhập 100 Cây Lưỡi Hổ từ NCC Sài Gòn Green",
+          time: "1 ngày trước",
+          icon: "📥",
+        },
+        {
+          type: "adjust",
+          title: "Kiểm kê kho",
+          detail: "Điều chỉnh số lượng sau kiểm kê định kỳ",
+          time: "2 ngày trước",
+          icon: "📋",
+        },
+      ];
+
+      const suppliers = [
+        {
+          id: 1,
+          name: "Đà Lạt Farm",
+          contact: "Nguyễn Văn A",
+          phone: "0901234567",
+          email: "contact@dalatfarm.com",
+          address: "Đà Lạt, Lâm Đồng",
+        },
+        {
+          id: 2,
+          name: "Sài Gòn Green",
+          contact: "Trần Thị B",
+          phone: "0912345678",
+          email: "info@saigongreen.vn",
+          address: "Quận 12, TP.HCM",
+        },
+        {
+          id: 3,
+          name: "Hoa Tươi Miền Bắc",
+          contact: "Lê Văn C",
+          phone: "0923456789",
+          email: "hoatuoi@gmail.com",
+          address: "Hà Nội",
+        },
+      ];
+
+      let currentAdjustProduct = null;
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        loadInventory();
+        loadActivities();
+        loadSuppliers();
+        populateProductSelect();
+        populateSupplierSelect();
+        updateStats();
+        setTodayDate();
+      });
+
+      // Load inventory table
+      function loadInventory() {
+        const tbody = document.getElementById("inventoryTableBody");
+        const filter = document.getElementById("stockFilter").value;
+
+        let filteredData = inventoryData;
+        if (filter === "low") {
+          filteredData = inventoryData.filter(
+            (p) => p.stock > 0 && p.stock <= p.minStock
+          );
+        } else if (filter === "out") {
+          filteredData = inventoryData.filter((p) => p.stock === 0);
+        }
+
+        tbody.innerHTML = filteredData
+          .map((product) => {
+            const stockStatus = getStockStatus(product.stock, product.minStock);
+            return `
+            <tr>
+              <td>
+                <div class="product-info">
+                  <img src="${product.image}" alt="${
+              product.name
+            }" class="product-image">
+                  <div>
+                    <div class="product-name">${product.name}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="product-sku">${product.sku}</td>
+              <td><strong>${product.stock}</strong></td>
+              <td><span class="stock-badge stock-${stockStatus.class}">${
+              stockStatus.text
+            }</span></td>
+              <td>${formatCurrency(product.importPrice)}</td>
+              <td>
+                <button class="btn-icon btn-edit" onclick="openAdjustModal(${
+                  product.id
+                })" title="Điều chỉnh tồn kho">
+                  ⚙️
+                </button>
+              </td>
+            </tr>
+          `;
+          })
+          .join("");
+      }
+
+      // Load activities
+      function loadActivities() {
+        const list = document.getElementById("activityList");
+        list.innerHTML = activities
+          .map(
+            (activity) => `
+          <div class="activity-item">
+            <div class="activity-icon ${activity.type}">
+              ${activity.icon}
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">${activity.title}</div>
+              <div class="activity-detail">${activity.detail}</div>
+              <div class="activity-time">${activity.time}</div>
+            </div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      // Load suppliers
+      function loadSuppliers() {
+        const list = document.getElementById("suppliersList");
+        list.innerHTML = suppliers
+          .map(
+            (supplier) => `
+          <div class="supplier-card">
+            <div class="supplier-name">🏪 ${supplier.name}</div>
+            <div class="supplier-info">
+              👤 ${supplier.contact}<br>
+              📞 ${supplier.phone}<br>
+              📧 ${supplier.email}<br>
+              📍 ${supplier.address}
+            </div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      // Populate product select
+      function populateProductSelect() {
+        const select = document.getElementById("importProduct");
+        select.innerHTML =
+          '<option value="">-- Chọn sản phẩm --</option>' +
+          inventoryData
+            .map((p) => `<option value="${p.id}">${p.name} (${p.sku})</option>`)
+            .join("");
+      }
+
+      // Populate supplier select
+      function populateSupplierSelect() {
+        const select = document.getElementById("importSupplier");
+        select.innerHTML =
+          '<option value="">-- Chọn nhà cung cấp --</option>' +
+          suppliers
+            .map((s) => `<option value="${s.id}">${s.name}</option>`)
+            .join("");
+      }
+
+      // Update statistics
+      function updateStats() {
+        const totalProducts = inventoryData.length;
+        const lowStock = inventoryData.filter(
+          (p) => p.stock > 0 && p.stock <= p.minStock
+        ).length;
+        const outOfStock = inventoryData.filter((p) => p.stock === 0).length;
+        const totalValue = inventoryData.reduce(
+          (sum, p) => sum + p.stock * p.importPrice,
+          0
+        );
+
+        document.getElementById("totalProducts").textContent = totalProducts;
+        document.getElementById("lowStockProducts").textContent = lowStock;
+        document.getElementById("outOfStockProducts").textContent = outOfStock;
+        document.getElementById("inventoryValue").textContent =
+          formatValue(totalValue);
+
+        // Show/hide alert
+        const alert = document.getElementById("lowStockAlert");
+        if (lowStock > 0 || outOfStock > 0) {
+          alert.style.display = "block";
+          alert.innerHTML = `⚠️ <strong>Cảnh báo:</strong> Có ${lowStock} sản phẩm sắp hết hàng${
+            outOfStock > 0 ? ` và ${outOfStock} sản phẩm đã hết hàng` : ""
+          }. Vui lòng nhập thêm hàng!`;
+        } else {
+          alert.style.display = "none";
+        }
+      }
+
+      // Get stock status
+      function getStockStatus(stock, minStock) {
+        if (stock === 0) {
+          return { class: "out", text: "❌ Hết hàng" };
+        } else if (stock <= minStock) {
+          return { class: "low", text: "⚠️ Sắp hết" };
+        } else {
+          return { class: "good", text: "✅ Đủ hàng" };
+        }
+      }
+
+      // Filter inventory
+      function filterInventory() {
+        loadInventory();
+      }
+
+      // Open import modal
+      function openImportModal() {
+        document.getElementById("importModal").classList.add("active");
+      }
+
+      // Close import modal
+      function closeImportModal() {
+        document.getElementById("importModal").classList.remove("active");
+        document.getElementById("importForm").reset();
+      }
+
+      // Open adjust modal
+      function openAdjustModal(productId) {
+        const product = inventoryData.find((p) => p.id === productId);
+        if (!product) return;
+
+        currentAdjustProduct = product;
+        document.getElementById("adjustProductName").textContent = product.name;
+        document.getElementById("adjustCurrentStock").textContent =
+          product.stock;
+        document.getElementById("adjustModal").classList.add("active");
+      }
+
+      // Close adjust modal
+      function closeAdjustModal() {
+        document.getElementById("adjustModal").classList.remove("active");
+        document.getElementById("adjustForm").reset();
+        currentAdjustProduct = null;
+      }
+
+      // Update adjust label
+      function updateAdjustLabel() {
+        const type = document.getElementById("adjustType").value;
+        const label = document.getElementById("adjustQuantityLabel");
+
+        if (type === "add") {
+          label.textContent = "Số lượng thêm *";
+        } else if (type === "subtract") {
+          label.textContent = "Số lượng trừ *";
+        } else {
+          label.textContent = "Số lượng mới *";
+        }
+      }
+
+      // Open supplier modal
+      function openSupplierModal() {
+        document.getElementById("supplierModal").classList.add("active");
+      }
+
+      // Close supplier modal
+      function closeSupplierModal() {
+        document.getElementById("supplierModal").classList.remove("active");
+        document.getElementById("supplierForm").reset();
+      }
+
+      // Open stock check modal
+      function openStockCheckModal() {
+        showNotification(
+          "success",
+          "Tính năng kiểm kê kho đang được phát triển..."
+        );
+      }
+
+      // Handle import form submission
+      document
+        .getElementById("importForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const productId = parseInt(
+            document.getElementById("importProduct").value
+          );
+          const quantity = parseInt(
+            document.getElementById("importQuantity").value
+          );
+          const price = parseFloat(
+            document.getElementById("importPrice").value
+          );
+          const supplierId = parseInt(
+            document.getElementById("importSupplier").value
+          );
+          const date = document.getElementById("importDate").value;
+          const note = document.getElementById("importNote").value;
+
+          const product = inventoryData.find((p) => p.id === productId);
+          const supplier = suppliers.find((s) => s.id === supplierId);
+
+          if (product && supplier) {
+            // Update stock
+            product.stock += quantity;
+            product.importPrice = price;
+
+            // Add activity
+            activities.unshift({
+              type: "in",
+              title: "Nhập hàng",
+              detail: `Nhập ${quantity} ${product.name} từ NCC ${supplier.name}`,
+              time: "Vừa xong",
+              icon: "📥",
+            });
+
+            // Update UI
+            loadInventory();
+            loadActivities();
+            updateStats();
+            closeImportModal();
+            showNotification(
+              "success",
+              `Đã nhập ${quantity} ${product.name} vào kho thành công!`
+            );
+          }
+        });
+
+      // Handle adjust form submission
+      document
+        .getElementById("adjustForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          if (!currentAdjustProduct) return;
+
+          const type = document.getElementById("adjustType").value;
+          const quantity = parseInt(
+            document.getElementById("adjustQuantity").value
+          );
+          const reason = document.getElementById("adjustReason").value;
+          const note = document.getElementById("adjustNote").value;
+
+          const oldStock = currentAdjustProduct.stock;
+          let newStock = oldStock;
+
+          if (type === "add") {
+            newStock = oldStock + quantity;
+          } else if (type === "subtract") {
+            newStock = Math.max(0, oldStock - quantity);
+          } else {
+            newStock = quantity;
+          }
+
+          currentAdjustProduct.stock = newStock;
+
+          // Add activity
+          const reasonText = document.querySelector(
+            `#adjustReason option[value="${reason}"]`
+          ).textContent;
+          activities.unshift({
+            type: "adjust",
+            title: "Điều chỉnh tồn kho",
+            detail: `${currentAdjustProduct.name}: ${oldStock} → ${newStock} - Lý do: ${reasonText}`,
+            time: "Vừa xong",
+            icon: "⚙️",
+          });
+
+          // Update UI
+          loadInventory();
+          loadActivities();
+          updateStats();
+          closeAdjustModal();
+          showNotification(
+            "success",
+            `Đã điều chỉnh tồn kho ${currentAdjustProduct.name} thành công!`
+          );
+        });
+
+      // Handle supplier form submission
+      document
+        .getElementById("supplierForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const newSupplier = {
+            id: suppliers.length + 1,
+            name: document.getElementById("supplierName").value,
+            contact: document.getElementById("supplierContact").value,
+            phone: document.getElementById("supplierPhone").value,
+            email: document.getElementById("supplierEmail").value,
+            address: document.getElementById("supplierAddress").value,
+          };
+
+          suppliers.push(newSupplier);
+          loadSuppliers();
+          populateSupplierSelect();
+          closeSupplierModal();
+          showNotification(
+            "success",
+            `Đã thêm nhà cung cấp ${newSupplier.name} thành công!`
+          );
+        });
+
+      // Export inventory report
+      function exportInventoryReport() {
+        let csv =
+          "SKU,Tên sản phẩm,Tồn kho,Tồn kho tối thiểu,Giá nhập,Trạng thái,Giá trị\n";
+
+        inventoryData.forEach((product) => {
+          const status = getStockStatus(product.stock, product.minStock);
+          const value = product.stock * product.importPrice;
+          csv += `${product.sku},${product.name},${product.stock},${product.minStock},${product.importPrice},${status.text},${value}\n`;
+        });
+
+        const blob = new Blob(["\ufeff" + csv], {
+          type: "text/csv;charset=utf-8;",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "bao_cao_ton_kho_" + new Date().getTime() + ".csv";
+        a.click();
+
+        showNotification("success", "Đã xuất báo cáo tồn kho thành công!");
+      }
+
+      // Set today date
+      function setTodayDate() {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("importDate").value = today;
+      }
+
+      // Format currency
+      function formatCurrency(amount) {
+        return new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(amount);
+      }
+
+      // Format value (B for billion, M for million)
+      function formatValue(amount) {
+        if (amount >= 1000000000) {
+          return (amount / 1000000000).toFixed(1) + "B";
+        } else if (amount >= 1000000) {
+          return (amount / 1000000).toFixed(1) + "M";
+        } else {
+          return (amount / 1000).toFixed(0) + "K";
+        }
+      }
+
+      // Show notification
+      function showNotification(type, message) {
+        const notification = document.getElementById("notification");
+        const icon = document.getElementById("notificationIcon");
+        const msg = document.getElementById("notificationMessage");
+
+        notification.className = "notification " + type + " active";
+        icon.textContent = type === "success" ? "✅" : "❌";
+        msg.textContent = message;
+
+        setTimeout(() => {
+          notification.classList.remove("active");
+        }, 3000);
+      }
+
+      // Close modals when clicking outside
+      document.querySelectorAll(".modal").forEach((modal) => {
+        modal.addEventListener("click", function (e) {
+          if (e.target === this) {
+            this.classList.remove("active");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
